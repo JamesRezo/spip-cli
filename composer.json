@@ -1,0 +1,8 @@
+{
+    "name": "spip/spip-cli",
+    "require": {
+        "php": ">=5.3.3",
+        "symfony/console": "2.4.*"
+    },
+    "minimum-stability": "dev"
+}

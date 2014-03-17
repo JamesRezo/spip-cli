@@ -2,7 +2,9 @@
 <?php
 // spip
 
-include_once './vendor/autoload.php';
+$dossier_cli = dirname(__FILE__);
+
+include_once "$dossier_cli/vendor/autoload.php";
 use Symfony\Component\Console\Application;
 use SPIP\Cli\Core\CoreInstall;
 
@@ -20,7 +22,7 @@ function getSubclassesOf($parent) {
 $spip = new Application('Ligne de commande pour SPIP', '0.1.0');
 
 // Inclusion des commandes de base
-foreach (glob("./spip-cli/*.php") as $commande_fichier) {
+foreach (glob("$dossier_cli/spip-cli/*.php") as $commande_fichier) {
 	include_once $commande_fichier;
 }
 

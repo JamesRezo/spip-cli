@@ -10,13 +10,7 @@ class CoreTelecharger extends Command {
 	protected function configure() {
 		$this
 			->setName('core:telecharger')
-			->setDescription('Télécharger SPIP dans un dossier (par défaut, la dernier version stable)')
-			-> addArgument(
-				'dossier',
-				InputArgument::OPTIONAL,
-				'Dossier où télécharger SPIP.',
-				getcwd()
-			)
+			->setDescription('Télécharger SPIP dans un dossier (par défaut, la dernière version stable)')
 			->addOption(
 				'branche',
 				'b',
@@ -28,18 +22,24 @@ class CoreTelecharger extends Command {
 	}
 
 	protected function execute(InputInterface $input, OutputInterface $output) {
+		// On travaille dans le dossier courant
+		$dossier = getcwd();
+		
+		// Liste des branches acceptées
 		$branches_ok = array(
 			'2.1' => 'svn://trac.rezo.net/spip/branches/spip-2.1',
 			'3.0' => 'svn://trac.rezo.net/spip/branches/spip-3.0',
 			'trunk' => 'svn://trac.rezo.net/spip/spip',
 		);
-		
-		$dossier = $input->getArgument('dossier');
+		// Branche séléctionnée
 		$branche = $input->getOption('branche');
 		
 		// On vérifie que l'on connait la version
 		if (!in_array($branche, array_keys($branches_ok))){
-			$output->writeln("<error>La version demandée ($branche) n'est pas prise en charge.</error>");
+			$output->writeln(array(
+				"<error>La version \"$branche\" n'est pas prise en charge.</error>",
+				'Branches supportées : <info>'.join('</info>, <info>', array_keys($branches_ok)).'</info>'
+			));
 		}
 		// Si c'est bon on continue
 		else{

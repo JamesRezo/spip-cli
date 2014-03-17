@@ -18,6 +18,9 @@ class CoreTelecharger extends Command {
 				'Donner explicitement la version à télécharger.',
 				'3.0' // Par défaut, la dernière version stable
 			)
+			->setAliases(array(
+				'dl' // abbréviation commune pour "download"
+			))
 		;
 	}
 
@@ -41,9 +44,16 @@ class CoreTelecharger extends Command {
 				'Branches supportées : <info>'.join('</info>, <info>', array_keys($branches_ok)).'</info>'
 			));
 		}
+		// Si c'est bon, on teste si on peut utiliser "exec"
+		elseif (!function_exists('passthru')){
+			$output->writeln("<error>Votre installation de PHP doit pouvoir exécuter des commandes externes avec la fonction passthru().</error>");
+		}
 		// Si c'est bon on continue
 		else{
 			$output->writeln("<info>C'est parti pour le téléchargement de la version $branche !</info>");
+			
+			// On lance la commande SVN dans le répertoire courant
+			passthru('svn co '.$branches_ok[$branche].' .');
 		}
 	}
 }

@@ -44,7 +44,7 @@ class CoreTelecharger extends Command {
 				'Branches supportées : <info>'.join('</info>, <info>', array_keys($branches_ok)).'</info>'
 			));
 		}
-		// Si c'est bon, on teste si on peut utiliser "exec"
+		// Si c'est bon, on teste si on peut utiliser "passthru"
 		elseif (!function_exists('passthru')){
 			$output->writeln("<error>Votre installation de PHP doit pouvoir exécuter des commandes externes avec la fonction passthru().</error>");
 		}

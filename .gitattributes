@@ -3,6 +3,7 @@
 /composer.json -text
 /composer.lock -text
 spip-cli/CoreTelecharger.php -text
+spip-cli/ViderCache.php -text
 /spip.php -text
 vendor/autoload.php -text
 vendor/composer/ClassLoader.php -text

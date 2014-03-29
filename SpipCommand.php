@@ -50,6 +50,14 @@ class SpipCommand extends Command {
         /* On part du principe que si _ECRIRE_INC_VERSION existe,
            inc_version.php a été chargé correctement. */
         if (_ECRIRE_INC_VERSION) {
+            /* charger inc_version.php ne charge pas ce fichier, et
+               certaines fonctions du core l'utilisent sans
+               l'importer, il faut donc le charger ici. */
+            include_spip('base/abstract_sql');
+            /* Il faut initialiser cette globale pour éviter les
+               problèmes de connexion sql. */
+            $GLOBALS['mysql_rappel_connexion'] = true;
+
             return TRUE;
         }
     }

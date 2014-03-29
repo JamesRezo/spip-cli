@@ -6,7 +6,6 @@ $dossier_cli = dirname(__FILE__);
 
 include_once "$dossier_cli/vendor/autoload.php";
 use Symfony\Component\Console\Application;
-use SPIP\Cli\Core\CoreInstall;
 
 // Pouvoir trouver les sous-classes d'une classe
 function getSubclassesOf($parent) {
@@ -28,7 +27,8 @@ foreach (glob("$dossier_cli/spip-cli/*.php") as $commande_fichier) {
 
 if ($commandes = getSubclassesOf('Symfony\Component\Console\Command\Command')){
 	foreach ($commandes as $class){
-		$spip->add(new $class);
+        if ($class !== 'SpipCommand')
+            $spip->add(new $class);
 	}
 }
 

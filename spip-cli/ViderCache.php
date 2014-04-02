@@ -6,9 +6,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
-include_once "$dossier_cli/SpipCommand.php";
-
-class CacheInhibeCommand extends SpipCommand {
+class CacheInhibeCommand extends Command {
     protected function configure() {
         $this
             ->setName('cache:inhibe')
@@ -20,12 +18,12 @@ class CacheInhibeCommand extends SpipCommand {
     }
 
     protected function execute(InputInterface $input, OutputInterface $output) {
+        global $spip_root;
+        global $spip_loaded;
 
-        $this->load_spip($input, $output);
+        if ($spip_loaded) {
 
-        if ($this->spip_dir) {
-
-            chdir($this->spip_dir);
+            chdir($spip_root);
 
             $purger = charger_fonction('purger', 'action');
             $purger('inhibe_cache');
@@ -35,7 +33,7 @@ class CacheInhibeCommand extends SpipCommand {
     }
 }
 
-class CacheReactiveCommand extends SpipCommand {
+class CacheReactiveCommand extends Command {
     protected function configure() {
         $this
             ->setName('cache:reactive')
@@ -47,12 +45,12 @@ class CacheReactiveCommand extends SpipCommand {
     }
 
     protected function execute(InputInterface $input, OutputInterface $output) {
+        global $spip_root;
+        global $spip_loaded;
 
-        $this->load_spip($input, $output);
+        if ($spip_loaded) {
 
-        if ($this->spip_dir) {
-
-            chdir($this->spip_dir);
+            chdir($spip_root);
 
             $purger = charger_fonction('purger', 'action');
             $purger('reactive_cache');
@@ -62,7 +60,7 @@ class CacheReactiveCommand extends SpipCommand {
     }
 }
 
-class CacheViderToutCommand extends SpipCommand {
+class CacheViderToutCommand extends Command {
     protected function configure() {
         $this
             ->setName('cache:vider')
@@ -74,12 +72,12 @@ class CacheViderToutCommand extends SpipCommand {
     }
 
     protected function execute(InputInterface $input, OutputInterface $output) {
+        global $spip_root;
+        global $spip_loaded;
 
-        $this->load_spip($input, $output);
+        if ($spip_loaded) {
 
-        if ($this->spip_dir) {
-
-            chdir($this->spip_dir);
+            chdir($spip_root);
 
             $purger = charger_fonction('purger', 'action');
             $purger('cache');
@@ -89,7 +87,7 @@ class CacheViderToutCommand extends SpipCommand {
     }
 }
 
-class CacheViderSquelettesCommand extends SpipCommand {
+class CacheViderSquelettesCommand extends Command {
     protected function configure() {
         $this
             ->setName('cache:vider_squelettes')
@@ -101,12 +99,12 @@ class CacheViderSquelettesCommand extends SpipCommand {
     }
 
     protected function execute(InputInterface $input, OutputInterface $output) {
+        global $spip_root;
+        global $spip_loaded;
 
-        $this->load_spip($input, $output);
+        if ($spip_loaded) {
 
-        if ($this->spip_dir) {
-
-            chdir($this->spip_dir);
+            chdir($spip_root);
 
             $purger = charger_fonction('purger', 'action');
             $purger('squelettes');
@@ -116,7 +114,7 @@ class CacheViderSquelettesCommand extends SpipCommand {
     }
 }
 
-class CacheViderVignettesCommand extends SpipCommand {
+class CacheViderVignettesCommand extends Command {
     protected function configure() {
         $this
             ->setName('cache:vider_vignettes')
@@ -128,11 +126,11 @@ class CacheViderVignettesCommand extends SpipCommand {
     }
 
     protected function execute(InputInterface $input, OutputInterface $output) {
+        global $spip_root;
+        global $spip_loaded;
 
-        $this->load_spip($input, $output);
-
-        if ($this->spip_dir) {
-            chdir($this->spip_dir);
+        if ($spip_loaded) {
+            chdir($spip_root);
 
             $purger = charger_fonction('purger', 'action');
             $purger('vignettes');

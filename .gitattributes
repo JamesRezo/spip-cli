@@ -1,5 +1,4 @@
 * text=auto !eol
-/SpipCommand.php -text
 /composer.json -text
 /composer.lock -text
 spip-cli/CoreTelecharger.php -text

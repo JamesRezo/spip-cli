@@ -1,8 +1,10 @@
 * text=auto !eol
 /composer.json -text
 /composer.lock -text
+spip-cli/CacheDesactiver.php -text
+spip-cli/CacheReactiver.php -text
+spip-cli/CacheVider.php -text
 spip-cli/CoreTelecharger.php -text
-spip-cli/ViderCache.php -text
 /spip.php -text
 vendor/autoload.php -text
 vendor/composer/ClassLoader.php -text

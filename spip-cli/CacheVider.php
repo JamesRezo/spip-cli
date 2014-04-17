@@ -40,16 +40,20 @@ class CacheVider extends Command {
 
             if (!($squelettes OR $images)) {
                 $purger('cache');
+               	$output->writeln('<info>Cache entièrement vidé (sauf vignettes)</info>');
             } else {
                 if ($squelettes) {
                     $purger('squelettes');
+                   	$output->writeln('<info>Cache de compilation des squelettes vidé</info>');
                 }
                 if ($images) {
                     $purger('vignettes');
+                    $output->writeln('<info>Cache des vignettes vidé</info>');
                 }
             }
-
-            $output->writeln('<info>Cache vidé</info>');
+        }
+        else{
+        	$output->writeln('<error>Vous n’êtes pas dans une installation de SPIP. Impossible de vider les caches.</error>');
         }
     }
 }

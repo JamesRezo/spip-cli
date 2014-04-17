@@ -27,19 +27,18 @@ class CacheVider extends Command {
     }
 
     protected function execute(InputInterface $input, OutputInterface $output) {
-        global $spip_root;
+        global $spip_racine;
         global $spip_loaded;
 
         if ($spip_loaded) {
-
-            chdir($spip_root);
+            chdir($spip_racine);
 
             $purger = charger_fonction('purger', 'action');
 
             $squelettes = $input->getOption('squelettes');
             $images = $input->getOption('images');
 
-            if ( ! ($squelettes OR $images)) {
+            if (!($squelettes OR $images)) {
                 $purger('cache');
             } else {
                 if ($squelettes) {

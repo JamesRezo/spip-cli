@@ -15,12 +15,11 @@ class CacheDesactiver extends Command {
     }
 
     protected function execute(InputInterface $input, OutputInterface $output) {
-        global $spip_root;
+        global $spip_racine;
         global $spip_loaded;
 
         if ($spip_loaded) {
-
-            chdir($spip_root);
+            chdir($spip_racine);
 
             $purger = charger_fonction('purger', 'action');
             $purger('inhibe_cache');

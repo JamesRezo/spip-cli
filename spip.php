@@ -85,15 +85,15 @@ function spip_chercher_racine() {
  * @return bool
  * 		Retourne true si on a pu charger SPIP correctement, false sinon.
  */
-function spip_charger($spip_root) {
+function spip_charger($spip_racine) {
     // Pour que les include dans les fichiers php de SPIP fonctionnent correctement,
     // il faut être à la racine du site.
     // On change de répertoire courant le temps de charger tout ça.
     $cwd = getcwd();
-    chdir($spip_root);
+    chdir($spip_racine);
 	
 	// On charge la machinerie de SPIP
-    include_once prep_path("$spip_root/ecrire/inc_version.php");
+    include_once prep_path("$spip_racine/ecrire/inc_version.php");
 
     // On revient dans le répertoire dans lequel la commande a été appellée
     chdir($cwd);

@@ -37,23 +37,30 @@ class CoreTelecharger extends Command {
 		// Branche séléctionnée
 		$branche = $input->getOption('branche');
 		
-		// On vérifie que l'on connait la version
-		if (!in_array($branche, array_keys($branches_ok))){
-			$output->writeln(array(
-				"<error>La version \"$branche\" n'est pas prise en charge.</error>",
-				'Branches supportées : <info>'.join('</info>, <info>', array_keys($branches_ok)).'</info>'
-			));
+		// On vérifie qu'on est pas déjà dans une installation de SPIP !
+		if ($GLOBALS['spip_loaded']) {
+			$output->writeln('<error>Vous êtes déjà dans une installation de SPIP '.$GLOBALS['spip_version_branche'].'. Téléchargement annulé.</error>');
 		}
-		// Si c'est bon, on teste si on peut utiliser "passthru"
-		elseif (!function_exists('passthru')){
-			$output->writeln("<error>Votre installation de PHP doit pouvoir exécuter des commandes externes avec la fonction passthru().</error>");
-		}
-		// Si c'est bon on continue
-		else{
-			$output->writeln("<info>C'est parti pour le téléchargement de la version $branche !</info>");
+		// Sinon c'est bon on peut télécharger SPIP
+		else {
+			// On vérifie que l'on connait la version
+			if (!in_array($branche, array_keys($branches_ok))){
+				$output->writeln(array(
+					"<error>La version \"$branche\" n'est pas prise en charge.</error>",
+					'Branches supportées : <info>'.join('</info>, <info>', array_keys($branches_ok)).'</info>'
+				));
+			}
+			// Si c'est bon, on teste si on peut utiliser "passthru"
+			elseif (!function_exists('passthru')){
+				$output->writeln("<error>Votre installation de PHP doit pouvoir exécuter des commandes externes avec la fonction passthru().</error>");
+			}
+			// Si c'est bon on continue
+			else{
+				$output->writeln("<info>C'est parti pour le téléchargement de la version $branche !</info>");
 			
-			// On lance la commande SVN dans le répertoire courant
-			passthru('svn co '.$branches_ok[$branche].' .');
+				// On lance la commande SVN dans le répertoire courant
+				passthru('svn co '.$branches_ok[$branche].' .');
+			}
 		}
 	}
 }

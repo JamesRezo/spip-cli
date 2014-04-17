@@ -86,6 +86,64 @@ function spip_chercher_racine() {
  * 		Retourne true si on a pu charger SPIP correctement, false sinon.
  */
 function spip_charger($spip_racine) {
+	// On liste toutes les globales déclarées au démarrage de SPIP (55 !!)
+	global
+		$nombre_de_logs,
+		$taille_des_logs,
+		$table_prefix,
+		$cookie_prefix,
+		$dossier_squelettes,
+		$filtrer_javascript,
+		$type_urls,
+		$debut_date_publication,
+		$ip,
+		$mysql_rappel_connexion,
+		$mysql_rappel_nom_base,
+		$test_i18n,
+		$ignore_auth_http,
+		$ignore_remote_user,
+		$derniere_modif_invalide,
+		$quota_cache,
+		$home_server,
+		$help_server,
+		$url_glossaire_externe,
+		$tex_server,
+		$traiter_math,
+		$xhtml,
+		$xml_indent,
+		$source_vignettes,
+		$formats_logos,
+		$controler_dates_rss,
+		$spip_pipeline,
+		$spip_matrice,
+		$plugins,
+		$surcharges,
+		$exceptions_des_tables,
+		$tables_principales,
+		$table_des_tables,
+		$tables_auxiliaires,
+		$table_primary,
+		$table_date,
+		$table_titre,
+		$tables_jointures,
+		$liste_des_statuts,
+		$liste_des_etats,
+		$liste_des_authentifications,
+		$spip_version_branche,
+		$spip_version_code,
+		$spip_version_base,
+		$spip_sql_version,
+		$spip_version_affichee,
+		$visiteur_session,
+		$auteur_session,
+		$connect_statut,
+		$connect_toutes_rubriques,
+		$hash_recherche,
+		$hash_recherche_strict,
+		$ldap_present,
+		$meta,
+		$connect_id_rubrique;
+	
     // Pour que les include dans les fichiers php de SPIP fonctionnent correctement,
     // il faut être à la racine du site.
     // On change de répertoire courant le temps de charger tout ça.
@@ -102,8 +160,6 @@ function spip_charger($spip_racine) {
     if (_ECRIRE_INC_VERSION) {
         // Charge l'API SQL, pour être sûr de l'avoir déjà
         include_spip('base/abstract_sql');
-        // Il faut initialiser cette globale pour éviter les problèmes de connexion sql
-        $GLOBALS['mysql_rappel_connexion'] = true;
 		// Tout s'est bien passé
         return TRUE;
     } else {

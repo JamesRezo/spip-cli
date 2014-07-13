@@ -80,7 +80,7 @@ function spip_chercher_racine() {
  * toutes les fonctions de SPIP comme lors du chargement d'une
  * page.
  *
- * @param string $spip_root
+ * @param string $spip_racine
  * 		Le chemin vers la racine du SPIP que l'on veut charger.
  * @return bool
  * 		Retourne true si on a pu charger SPIP correctement, false sinon.
@@ -153,7 +153,7 @@ function spip_charger($spip_racine) {
 	// On charge la machinerie de SPIP
     include_once prep_path("$spip_racine/ecrire/inc_version.php");
 
-    // On revient dans le répertoire dans lequel la commande a été appellée
+    // On revient dans le répertoire dans lequel la commande a été appelée
     chdir($cwd);
 
     // Si _ECRIRE_INC_VERSION existe, inc_version.php a été chargé correctement
@@ -193,3 +193,4 @@ if ($commandes = getSubclassesOf('Symfony\Component\Console\Command\Command')){
 
 // Lancement de l'application
 $spip->run();
+

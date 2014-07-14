@@ -16,12 +16,13 @@ use Symfony\Component\Console\Application;
  * 		Retourne un tableau de chaînes contenant chacune le nom d'une classe.
  */
 function getSubclassesOf($parent) {
-    $result = array();
-    foreach (get_declared_classes() as $class) {
-        if (is_subclass_of($class, $parent))
-            $result[] = $class;
-    }
-    return $result;
+	$result = array();
+	foreach (get_declared_classes() as $class) {
+		if (is_subclass_of($class, $parent)) {
+			$result[] = $class;
+		}
+	}
+	return $result;
 }
 
 /**
@@ -38,11 +39,11 @@ function getSubclassesOf($parent) {
  * 		l'environnement dans lequel on se trouve.
  */
 function prep_path($path) {
-    if (DIRECTORY_SEPARATOR !== '/') {
-        return str_replace('/', DIRECTORY_SEPARATOR, $path);
-    } else {
-        return $path;
-    }
+	if (DIRECTORY_SEPARATOR !== '/') {
+		return str_replace('/', DIRECTORY_SEPARATOR, $path);
+	} else {
+		return $path;
+	}
 }
 
 /**
@@ -57,20 +58,20 @@ function prep_path($path) {
  * 		Retourne false si on n'est pas dans l'arborescence d'une installation SPIP.
  */
 function spip_chercher_racine() {
-    $cwd = getcwd();
+	$cwd = getcwd();
 
-    while ($cwd) {
-        if (file_exists(prep_path("$cwd/ecrire/inc_version.php"))) {
-            return $cwd;
-        } else {
-            /* On remonte d'un dossier dans l'arborescence */
-            $cwd_array = explode(DIRECTORY_SEPARATOR, $cwd);
-            array_pop($cwd_array);
-            $cwd = implode(DIRECTORY_SEPARATOR, $cwd_array);
-        }
-    }
-    
-    return FALSE;
+	while ($cwd) {
+		if (file_exists(prep_path("$cwd/ecrire/inc_version.php"))) {
+		    return $cwd;
+		} else {
+			/* On remonte d'un dossier dans l'arborescence */
+			$cwd_array = explode(DIRECTORY_SEPARATOR, $cwd);
+			array_pop($cwd_array);
+			$cwd = implode(DIRECTORY_SEPARATOR, $cwd_array);
+		}
+	}
+
+	return false;
 }
 
 /**
@@ -143,29 +144,29 @@ function spip_charger($spip_racine) {
 		$ldap_present,
 		$meta,
 		$connect_id_rubrique;
-	
-    // Pour que les include dans les fichiers php de SPIP fonctionnent correctement,
-    // il faut être à la racine du site.
-    // On change de répertoire courant le temps de charger tout ça.
-    $cwd = getcwd();
-    chdir($spip_racine);
-	
+
+	// Pour que les include dans les fichiers php de SPIP fonctionnent correctement,
+	// il faut être à la racine du site.
+	// On change de répertoire courant le temps de charger tout ça.
+	$cwd = getcwd();
+	chdir($spip_racine);
+
 	// On charge la machinerie de SPIP
-    include_once prep_path("$spip_racine/ecrire/inc_version.php");
+	include_once prep_path("$spip_racine/ecrire/inc_version.php");
 
-    // On revient dans le répertoire dans lequel la commande a été appelée
-    chdir($cwd);
+	// On revient dans le répertoire dans lequel la commande a été appelée
+	chdir($cwd);
 
-    // Si _ECRIRE_INC_VERSION existe, inc_version.php a été chargé correctement
-    if (_ECRIRE_INC_VERSION) {
-        // Charge l'API SQL, pour être sûr de l'avoir déjà
-        include_spip('base/abstract_sql');
+	// Si _ECRIRE_INC_VERSION existe, inc_version.php a été chargé correctement
+	if (_ECRIRE_INC_VERSION) {
+		// Charge l'API SQL, pour être sûr de l'avoir déjà
+		include_spip('base/abstract_sql');
 		// Tout s'est bien passé
-        return TRUE;
-    } else {
-    	// Mauvais chargement
-        return FALSE;
-    }
+		return TRUE;
+	} else {
+		// Mauvais chargement
+		return FALSE;
+	}
 }
 
 // Création de la ligne de commande

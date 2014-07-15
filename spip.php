@@ -150,7 +150,10 @@ function spip_charger($spip_racine) {
 	// On change de répertoire courant le temps de charger tout ça.
 	$cwd = getcwd();
 	chdir($spip_racine);
-
+	
+	// On anhile la demande d'installation, si jamais ce n'est pas installé
+	define('_FILE_CONNECT', true);
+	
 	// On charge la machinerie de SPIP
 	include_once prep_path("$spip_racine/ecrire/inc_version.php");
 

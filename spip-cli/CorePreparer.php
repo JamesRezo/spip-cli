@@ -44,7 +44,6 @@ class CorePreparer extends Command {
 			
 			// Si le dossier a un mode différent de celui demandé (777 par défaut)
 			if (substr(sprintf('%o', fileperms($dossier)), -3) != $droits) {
-				var_dump(octdec('0' . $droits));
 				chmod($dossier, octdec('0' . $droits));
 				$sortie = "\tModification des droits : <info>$droits</info>";
 			}

@@ -27,38 +27,42 @@ class CorePreparer extends Command {
 		
 		$droits = $input->getOption('droits');
 		
-		// Si jamais SPIP est déjà installé (pourquoi pas ?), on revient à la racine
+		// On ne prépare les fichiers que si SPIP est bien présent
 		if ($spip_loaded) {
+			// On revient à la racine
 			chdir($spip_racine);
-		}
+			
+			// Vérification des dossiers et leurs droits
+			foreach (array('config', 'IMG', 'lib', 'local', 'plugins', 'tmp') as $dossier) {
+				$sortie = '';
+			
+				// Si le dossier n'existe pas on l'ajoute
+				if (!is_dir($dossier)) {
+					mkdir($dossier);
+					$sortie = "\tCréation du dossier : <info>OK</info>";
+				}
+			
+				// Si le dossier a un mode différent de celui demandé (777 par défaut)
+				if (substr(sprintf('%o', fileperms($dossier)), -3) != $droits) {
+					chmod($dossier, octdec('0' . $droits));
+					$sortie = "\tModification des droits : <info>$droits</info>";
+				}
+			
+				// Si on doit afficher quelque chose
+				if ($sortie) {
+					$sortie = "<comment>$dossier/</comment>\n" . $sortie;
+					$output->writeln($sortie);
+				}
+			}
 		
-		// Vérification des dossiers et leurs droits
-		foreach (array('config', 'IMG', 'lib', 'local', 'plugins', 'tmp') as $dossier) {
-			$sortie = '';
-			
-			// Si le dossier n'existe pas on l'ajoute
-			if (!is_dir($dossier)) {
-				mkdir($dossier);
-				$sortie = "\tCréation du dossier : <info>OK</info>";
-			}
-			
-			// Si le dossier a un mode différent de celui demandé (777 par défaut)
-			if (substr(sprintf('%o', fileperms($dossier)), -3) != $droits) {
-				chmod($dossier, octdec('0' . $droits));
-				$sortie = "\tModification des droits : <info>$droits</info>";
-			}
-			
-			// Si on doit afficher quelque chose
-			if ($sortie) {
-				$sortie = "<comment>$dossier/</comment>\n" . $sortie;
-				$output->writeln($sortie);
+			// .htaccess
+			if (!is_file('.htaccess') and is_file('htaccess.txt')) {
+				copy('htaccess.txt', '.htaccess');
+				$output->writeln("<comment>Fichier .htaccess</comment>\n\tActivation du fichier depuis le modèle de SPIP : <info>OK</info>");
 			}
 		}
-		
-		// .htaccess
-		if (!is_file('.htaccess') and is_file('htaccess.txt')) {
-			copy('htaccess.txt', '.htaccess');
-			$output->writeln("<comment>Fichier .htaccess</comment>\n\tActivation du fichier depuis le modèle de SPIP : <info>OK</info>");
+		else {
+			$output->writeln('<error>Vous devez télécharger SPIP avant de pouvoir préparer l’installation.</error>');
 		}
 	}
 }

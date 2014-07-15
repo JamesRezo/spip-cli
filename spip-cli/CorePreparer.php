@@ -18,6 +18,13 @@ class CorePreparer extends Command {
 				'Droits des dossiers en décimales',
 				'777'
 			)
+			->addOption(
+				'rewrite-base',
+				null,
+				InputOption::VALUE_OPTIONAL,
+				'Configuration du RewriteBase pour la réécriture des URLs',
+				''
+			)
 		;
 	}
 
@@ -26,6 +33,7 @@ class CorePreparer extends Command {
 		global $spip_loaded;
 		
 		$droits = $input->getOption('droits');
+		$rewrite_base = $input->getOption('rewrite-base');
 		
 		// On ne prépare les fichiers que si SPIP est bien présent
 		if ($spip_loaded) {
@@ -59,6 +67,14 @@ class CorePreparer extends Command {
 			if (!is_file('.htaccess') and is_file('htaccess.txt')) {
 				copy('htaccess.txt', '.htaccess');
 				$output->writeln("<comment>Fichier .htaccess</comment>\n\tActivation du fichier depuis le modèle de SPIP : <info>OK</info>");
+				// Si un RewriteBase est défini, on essaye de le changer
+				if ($rewrite_base and include_spip('inc/flock') and lire_fichier('.htaccess', $htaccess)) {
+					$htaccess = str_replace('RewriteBase /', 'RewriteBase '.$rewrite_base, $htaccess);
+					supprimer_fichier('.htaccess');
+					if (ecrire_fichier('.htaccess', $htaccess)) {
+						$output->writeln("\tRewriteBase définie à <info>$rewrite_base</info>");
+					}
+				}
 			}
 		}
 		else {

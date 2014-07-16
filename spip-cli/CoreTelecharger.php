@@ -39,7 +39,7 @@ class CoreTelecharger extends Command {
 		
 		// On vérifie qu'on est pas déjà dans une installation de SPIP !
 		if ($GLOBALS['spip_loaded']) {
-			$output->writeln('<error>Vous êtes déjà dans une installation de SPIP '.$GLOBALS['spip_version_branche'].'. Téléchargement annulé.</error>');
+			$output->writeln('<info>Vous êtes déjà dans une installation de SPIP '.$GLOBALS['spip_version_branche'].'.</info> <comment>Téléchargement annulé.</comment>');
 		}
 		// Sinon c'est bon on peut télécharger SPIP
 		else {

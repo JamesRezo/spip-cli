@@ -153,8 +153,11 @@ function spip_charger($spip_racine) {
 	
 	// On anhile la demande d'installation, si jamais ce n'est pas installé
 	if (!is_file('config/connect.php')) {
-		define('_FILE_CONNECT', true);
+		define('_FILE_CONNECT', 'config/connect.tmp.php');
 	}
+	
+	// TIMEOUT de 24h…
+	define('_UPGRADE_TIME_OUT', 24*3600);
 	
 	// On charge la machinerie de SPIP
 	include_once prep_path("$spip_racine/ecrire/inc_version.php");

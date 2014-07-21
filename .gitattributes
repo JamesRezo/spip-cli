@@ -4,6 +4,7 @@
 spip-cli/CacheDesactiver.php -text
 spip-cli/CacheReactiver.php -text
 spip-cli/CacheVider.php -text
+spip-cli/CoreInstaller.php -text
 spip-cli/CorePreparer.php -text
 spip-cli/CoreTelecharger.php -text
 /spip.php -text

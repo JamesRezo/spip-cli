@@ -188,8 +188,12 @@ foreach (glob("$dossier_cli/spip-cli/*.php") as $commande_fichier) {
 
 if (($spip_racine = spip_chercher_racine()) and spip_charger($spip_racine)) {
     $spip_loaded = TRUE;
-    // TODO charger toutes les commandes qui se trouvent dans le path
-    // de SPIP.
+
+    // charger toutes les commandes qui se trouvent dans le path de SPIP.
+    $commandes = find_all_in_path('spip-cli/', '.*[.]php');
+    foreach ($commandes as $commande_fichier) {
+        include_once $commande_fichier;
+    }
 } else {
     $spip_loaded = FALSE;
 }

@@ -42,3 +42,9 @@ core
   core:preparer      Préparer les fichiers pour installer SPIP correctement.
   core:telecharger   Télécharger SPIP dans un dossier (par défaut, la dernière version stable)
 ```
+
+Dans la version 0.2.1, `spip-cli` permet :
+
+* de télécharger SPIP dans un dossier,
+* d'installer la base de données de SPIP et le premier utilisateur,
+* vider et activer/desactiver le cache.

@@ -1,4 +1,6 @@
 * text=auto !eol
+/INSTALL.md -text
+/README.md -text
 /composer.json -text
 /composer.lock -text
 spip-cli/CacheDesactiver.php -text

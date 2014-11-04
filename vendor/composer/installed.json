@@ -1,34 +1,36 @@
 [
     {
         "name": "symfony/console",
-        "version": "2.4.x-dev",
-        "version_normalized": "2.4.9999999.9999999-dev",
+        "version": "2.5.x-dev",
+        "version_normalized": "2.5.9999999.9999999-dev",
         "target-dir": "Symfony/Component/Console",
         "source": {
             "type": "git",
             "url": "https://github.com/symfony/Console.git",
-            "reference": "ef20f1f58d7f693ee888353962bd2db336e3bbcb"
+            "reference": "210faf0c2bb740d1ee992b4d4ea8cf597ef77672"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/symfony/Console/zipball/ef20f1f58d7f693ee888353962bd2db336e3bbcb",
-            "reference": "ef20f1f58d7f693ee888353962bd2db336e3bbcb",
+            "url": "https://api.github.com/repos/symfony/Console/zipball/210faf0c2bb740d1ee992b4d4ea8cf597ef77672",
+            "reference": "210faf0c2bb740d1ee992b4d4ea8cf597ef77672",
             "shasum": ""
         },
         "require": {
             "php": ">=5.3.3"
         },
         "require-dev": {
+            "psr/log": "~1.0",
             "symfony/event-dispatcher": "~2.1"
         },
         "suggest": {
+            "psr/log": "For using the console logger",
             "symfony/event-dispatcher": ""
         },
-        "time": "2014-03-01 17:35:04",
+        "time": "2014-10-30 20:17:55",
         "type": "library",
         "extra": {
             "branch-alias": {
-                "dev-master": "2.4-dev"
+                "dev-master": "2.5-dev"
             }
         },
         "installation-source": "source",
@@ -43,14 +45,12 @@
         ],
         "authors": [
             {
-                "name": "Fabien Potencier",
-                "email": "fabien@symfony.com",
-                "homepage": "http://fabien.potencier.org",
-                "role": "Lead Developer"
-            },
-            {
                 "name": "Symfony Community",
                 "homepage": "http://symfony.com/contributors"
+            },
+            {
+                "name": "Fabien Potencier",
+                "email": "fabien@symfony.com"
             }
         ],
         "description": "Symfony Console Component",

@@ -46,8 +46,13 @@ vendor/symfony/console/Symfony/Component/Console/Helper/Helper.php -text
 vendor/symfony/console/Symfony/Component/Console/Helper/HelperInterface.php -text
 vendor/symfony/console/Symfony/Component/Console/Helper/HelperSet.php -text
 vendor/symfony/console/Symfony/Component/Console/Helper/InputAwareHelper.php -text
+vendor/symfony/console/Symfony/Component/Console/Helper/ProgressBar.php -text
 vendor/symfony/console/Symfony/Component/Console/Helper/ProgressHelper.php -text
+vendor/symfony/console/Symfony/Component/Console/Helper/QuestionHelper.php -text
+vendor/symfony/console/Symfony/Component/Console/Helper/Table.php -text
 vendor/symfony/console/Symfony/Component/Console/Helper/TableHelper.php -text
+vendor/symfony/console/Symfony/Component/Console/Helper/TableSeparator.php -text
+vendor/symfony/console/Symfony/Component/Console/Helper/TableStyle.php -text
 vendor/symfony/console/Symfony/Component/Console/Input/ArgvInput.php -text
 vendor/symfony/console/Symfony/Component/Console/Input/ArrayInput.php -text
 vendor/symfony/console/Symfony/Component/Console/Input/Input.php -text
@@ -58,6 +63,7 @@ vendor/symfony/console/Symfony/Component/Console/Input/InputInterface.php -text
 vendor/symfony/console/Symfony/Component/Console/Input/InputOption.php -text
 vendor/symfony/console/Symfony/Component/Console/Input/StringInput.php -text
 vendor/symfony/console/Symfony/Component/Console/LICENSE -text
+vendor/symfony/console/Symfony/Component/Console/Logger/ConsoleLogger.php -text
 vendor/symfony/console/Symfony/Component/Console/Output/BufferedOutput.php -text
 vendor/symfony/console/Symfony/Component/Console/Output/ConsoleOutput.php -text
 vendor/symfony/console/Symfony/Component/Console/Output/ConsoleOutputInterface.php -text
@@ -65,6 +71,9 @@ vendor/symfony/console/Symfony/Component/Console/Output/NullOutput.php -text
 vendor/symfony/console/Symfony/Component/Console/Output/Output.php -text
 vendor/symfony/console/Symfony/Component/Console/Output/OutputInterface.php -text
 vendor/symfony/console/Symfony/Component/Console/Output/StreamOutput.php -text
+vendor/symfony/console/Symfony/Component/Console/Question/ChoiceQuestion.php -text
+vendor/symfony/console/Symfony/Component/Console/Question/ConfirmationQuestion.php -text
+vendor/symfony/console/Symfony/Component/Console/Question/Question.php -text
 vendor/symfony/console/Symfony/Component/Console/README.md -text
 vendor/symfony/console/Symfony/Component/Console/Resources/bin/hiddeninput.exe -text
 vendor/symfony/console/Symfony/Component/Console/Shell.php -text
@@ -85,6 +94,7 @@ vendor/symfony/console/Symfony/Component/Console/Tests/Fixtures/DescriptorApplic
 vendor/symfony/console/Symfony/Component/Console/Tests/Fixtures/DescriptorApplication2.php -text
 vendor/symfony/console/Symfony/Component/Console/Tests/Fixtures/DescriptorCommand1.php -text
 vendor/symfony/console/Symfony/Component/Console/Tests/Fixtures/DescriptorCommand2.php -text
+vendor/symfony/console/Symfony/Component/Console/Tests/Fixtures/DummyOutput.php -text
 vendor/symfony/console/Symfony/Component/Console/Tests/Fixtures/Foo1Command.php -text
 vendor/symfony/console/Symfony/Component/Console/Tests/Fixtures/Foo2Command.php -text
 vendor/symfony/console/Symfony/Component/Console/Tests/Fixtures/Foo3Command.php -text
@@ -111,6 +121,9 @@ vendor/symfony/console/Symfony/Component/Console/Tests/Fixtures/application_rend
 vendor/symfony/console/Symfony/Component/Console/Tests/Fixtures/application_renderexception3.txt -text
 vendor/symfony/console/Symfony/Component/Console/Tests/Fixtures/application_renderexception3decorated.txt -text
 vendor/symfony/console/Symfony/Component/Console/Tests/Fixtures/application_renderexception4.txt -text
+vendor/symfony/console/Symfony/Component/Console/Tests/Fixtures/application_renderexception_doublewidth1.txt -text
+vendor/symfony/console/Symfony/Component/Console/Tests/Fixtures/application_renderexception_doublewidth1decorated.txt -text
+vendor/symfony/console/Symfony/Component/Console/Tests/Fixtures/application_renderexception_doublewidth2.txt -text
 vendor/symfony/console/Symfony/Component/Console/Tests/Fixtures/application_run1.txt -text
 vendor/symfony/console/Symfony/Component/Console/Tests/Fixtures/application_run2.txt -text
 vendor/symfony/console/Symfony/Component/Console/Tests/Fixtures/application_run3.txt -text
@@ -177,8 +190,11 @@ vendor/symfony/console/Symfony/Component/Console/Tests/Formatter/OutputFormatter
 vendor/symfony/console/Symfony/Component/Console/Tests/Helper/DialogHelperTest.php -text
 vendor/symfony/console/Symfony/Component/Console/Tests/Helper/FormatterHelperTest.php -text
 vendor/symfony/console/Symfony/Component/Console/Tests/Helper/HelperSetTest.php -text
+vendor/symfony/console/Symfony/Component/Console/Tests/Helper/ProgressBarTest.php -text
 vendor/symfony/console/Symfony/Component/Console/Tests/Helper/ProgressHelperTest.php -text
+vendor/symfony/console/Symfony/Component/Console/Tests/Helper/QuestionHelperTest.php -text
 vendor/symfony/console/Symfony/Component/Console/Tests/Helper/TableHelperTest.php -text
+vendor/symfony/console/Symfony/Component/Console/Tests/Helper/TableTest.php -text
 vendor/symfony/console/Symfony/Component/Console/Tests/Input/ArgvInputTest.php -text
 vendor/symfony/console/Symfony/Component/Console/Tests/Input/ArrayInputTest.php -text
 vendor/symfony/console/Symfony/Component/Console/Tests/Input/InputArgumentTest.php -text
@@ -186,6 +202,7 @@ vendor/symfony/console/Symfony/Component/Console/Tests/Input/InputDefinitionTest
 vendor/symfony/console/Symfony/Component/Console/Tests/Input/InputOptionTest.php -text
 vendor/symfony/console/Symfony/Component/Console/Tests/Input/InputTest.php -text
 vendor/symfony/console/Symfony/Component/Console/Tests/Input/StringInputTest.php -text
+vendor/symfony/console/Symfony/Component/Console/Tests/Logger/ConsoleLoggerTest.php -text
 vendor/symfony/console/Symfony/Component/Console/Tests/Output/ConsoleOutputTest.php -text
 vendor/symfony/console/Symfony/Component/Console/Tests/Output/NullOutputTest.php -text
 vendor/symfony/console/Symfony/Component/Console/Tests/Output/OutputTest.php -text

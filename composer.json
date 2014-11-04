@@ -2,7 +2,7 @@
     "name": "spip/spip-cli",
     "require": {
         "php": ">=5.3.3",
-        "symfony/console": "2.4.*"
+        "symfony/console": "2.5.*"
     },
     "minimum-stability": "dev"
 }

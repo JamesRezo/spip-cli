@@ -17,6 +17,12 @@ class PluginsDesactiver extends Command {
                 InputArgument::IS_ARRAY,
                 'La liste de plugins à désactiver.'
             )
+            ->addOption(
+                'all',
+                'a',
+                InputOption::VALUE_NONE,
+                "Désactiver tous les plugins."
+            )
         ;
     }
 
@@ -28,7 +34,28 @@ class PluginsDesactiver extends Command {
         if ($spip_loaded) {
             chdir($spip_racine);
 
-            if ( ! $plugins = $input->getArgument('plugins')) {
+            $actifs = unserialize($GLOBALS['meta']['plugin']);
+
+            if ($input->getOption('all')) {
+                $plugins = array_map('strtolower',array_keys($actifs));
+
+                include_spip('base/abstract_sql');
+                $plugins = array_filter($plugins, function ($prefixe) {
+                    return sql_countsel('spip_plugins as pl'.
+                                        ' INNER JOIN spip_paquets as pa'.
+                                        ' ON pa.prefixe=pl.prefixe',
+                                        array(
+                                            'pl.prefixe='.sql_quote(strtoupper($prefixe)),
+                                            'pa.constante="_DIR_PLUGINS"',
+                                        ));
+
+                });
+
+            } else {
+                $plugins = $input->getArgument('plugins');
+            }
+
+            if ( ! $plugins) {
                 $output->writeln('<comment>Vous n\'avez pas spécifié de plugin à désactiver</comment>');
 
                 $command = $this->getApplication()->find('help');
@@ -40,10 +67,6 @@ class PluginsDesactiver extends Command {
                 $command->run($input, $output);
                 return;
             }
-
-            $plugins = $input->getArgument('plugins');
-
-            $actifs = unserialize($GLOBALS['meta']['plugin']);
 
             $dir_uns = array();
             foreach ($plugins as $prefixe) {

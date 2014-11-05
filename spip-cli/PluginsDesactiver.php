@@ -106,6 +106,15 @@ class PluginsDesactiver extends Command {
             if (count($dirs_un)){
                 include_spip('inc/plugin');
                 ecrire_plugin_actifs($dirs_un,false,'enleve');
+                /* actualiser la liste des paquets locaux */
+                include_spip('inc/svp_depoter_local');
+                /*sans forcer tout le recalcul en base, mais en
+                  récupérant les erreurs XML */
+                $err = array();
+                svp_actualiser_paquets_locaux(false, $err);
+                if ($err) {
+                    $output->writeln("<error>Erreur XML $err</error>");
+                }
             }
 
             chdir($cwd);

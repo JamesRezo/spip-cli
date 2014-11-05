@@ -6,6 +6,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Question\ConfirmationQuestion;
 
 class PluginsDesactiver extends Command {
     protected function configure() {
@@ -66,6 +67,11 @@ class PluginsDesactiver extends Command {
                 $input = new ArrayInput($arguments);
                 $command->run($input, $output);
                 return;
+            } else {
+                $helper = $this->getHelper('question');
+                $confirmer = new ConfirmationQuestion("Vous allez désactiver les plugins suivants : " . implode(', ', $plugins) . ". \n \nÊtes-vous certain-e de vouloir continuer ? ", false);
+
+                if ( ! $helper->ask($input, $output, $confirmer)) return;
             }
 
             $dir_uns = array();

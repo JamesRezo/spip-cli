@@ -9,6 +9,7 @@ spip-cli/CacheVider.php -text
 spip-cli/CoreInstaller.php -text
 spip-cli/CorePreparer.php -text
 spip-cli/CoreTelecharger.php -text
+spip-cli/PluginsActiver.php -text
 spip-cli/PluginsDesactiver.php -text
 spip-cli/PluginsLister.php -text
 /spip.php -text

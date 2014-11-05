@@ -6,6 +6,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Question\Question;
 use Symfony\Component\Console\Question\ConfirmationQuestion;
 
 class PluginsDesactiver extends Command {
@@ -37,6 +38,8 @@ class PluginsDesactiver extends Command {
 
             $actifs = unserialize($GLOBALS['meta']['plugin']);
 
+            /* Si on a choisi l'options --all, on prends tous les
+               plugins qui ne sont pas dans plugins-dist */
             if ($input->getOption('all')) {
                 $plugins = array_map('strtolower',array_keys($actifs));
 
@@ -57,23 +60,37 @@ class PluginsDesactiver extends Command {
             }
 
             if ( ! $plugins) {
-                $output->writeln('<comment>Vous n\'avez pas spécifié de plugin à désactiver</comment>');
 
-                $command = $this->getApplication()->find('help');
-                $arguments = array(
-                    'command' => 'help',
-                    'command_name' => 'plugins:desactiver',
-                );
-                $input = new ArrayInput($arguments);
-                $command->run($input, $output);
-                return;
-            } else {
+                /* Si pas de plugin(s) spécifiés, on demande */
                 $helper = $this->getHelper('question');
-                $confirmer = new ConfirmationQuestion("Vous allez désactiver les plugins suivants : " . implode(', ', $plugins) . ". \n \nÊtes-vous certain-e de vouloir continuer ? ", false);
+                $question = new Question("Quel plugin faut-il désactiver ?\n", 'help');
+                $question->setAutoCompleterValues(array_map('strtolower', array_keys($actifs)));
 
-                if ( ! $helper->ask($input, $output, $confirmer)) return;
+                $reponse = trim($helper->ask($input, $output, $question));
+                /* Si même après avoir demandé, l'utilisateur n'a pas
+                   donné de plugin à désactiver, on affiche l'aide. */
+                if ($reponse == 'help') {
+                    $command = $this->getApplication()->find('help');
+                    $arguments = array(
+                        'command' => 'help',
+                        'command_name' => 'plugins:desactiver',
+                    );
+                    $input = new ArrayInput($arguments);
+                    $command->run($input, $output);
+                    return;
+                }
+
+                $plugins = explode(' ', $reponse);
             }
 
+            /* On liste le(s) plugin(s) qui seront désactivés et on
+               demande confirmation. */
+            $helper = $this->getHelper('question');
+            $confirmer = new ConfirmationQuestion("Vous allez désactiver les plugins suivants : " . implode(', ', $plugins) . ".\nÊtes-vous certain-e de vouloir continuer ? ", false);
+
+            if ( ! $helper->ask($input, $output, $confirmer)) return;
+
+            /* Et enfin, on désactive le(s) plugin(s) */
             $dir_uns = array();
             foreach ($plugins as $prefixe) {
                 if ( ! isset($actifs[strtoupper($prefixe)])){
@@ -92,6 +109,7 @@ class PluginsDesactiver extends Command {
             }
 
             chdir($cwd);
+
         } else {
 
             $output->writeln("<comment>Vous n'êtes pas dans un installation de SPIP, il n'y a pas de plugins disponibles.</comment>");

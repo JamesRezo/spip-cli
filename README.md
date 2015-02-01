@@ -47,4 +47,4 @@ Dans la version 0.2.1, `spip-cli` permet :
 
 * de télécharger SPIP dans un dossier,
 * d'installer la base de données de SPIP et le premier utilisateur,
-* vider et activer/desactiver le cache.
+* vider et activer/désactiver le cache.

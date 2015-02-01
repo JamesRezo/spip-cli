@@ -13,6 +13,7 @@ spip-cli/PluginsActiver.php -text
 spip-cli/PluginsDesactiver.php -text
 spip-cli/PluginsLister.php -text
 /spip.php -text
+/spip_completion.sh -text
 vendor/autoload.php -text
 vendor/composer/ClassLoader.php -text
 vendor/composer/autoload_classmap.php -text

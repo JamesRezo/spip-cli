@@ -1,5 +1,8 @@
 #!/bin/sh
 #
+# Source :
+# https://github.com/jaytaph/SFConsole/blob/master/console_completion.sh
+#
 # Symfony2 App/Console autocompletion (commands and arguments only)
 # Copyright (c) 2014, Joshua Thijssen
 # All rights reserved.

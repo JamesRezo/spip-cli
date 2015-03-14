@@ -73,7 +73,7 @@ class PluginsLister extends Command {
 
         } else {
 
-            $output->writeln("<comment>Vous n'êtes pas dans un installation de SPIP, il n'y a pas de plugins disponibles.</comment>");
+            $output->writeln("<comment>Vous n'êtes pas dans une installation de SPIP, il n'y a pas de plugins disponibles.</comment>");
 
         }
     }

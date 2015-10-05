@@ -47,7 +47,7 @@ class CoreMettreajour extends Command {
 				);
 				// Branche séléctionnée
 				$branche = $input->getOption('branche');
-				if (isset($branche)) {
+				if (isset($branche) && !empty($branche)) {
 					// On vérifie que l'on connait la version
 					if (!in_array($branche, array_keys($branches_ok))){
 						$output->writeln(array(

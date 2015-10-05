@@ -11,6 +11,13 @@ class CoreMettreajour extends Command {
 		$this
 			->setName('core:mettreajour')
 			->setDescription('Mettre à jour la branche de SPIP qui est installée.')
+			->addOption(
+				'branche',
+				'b',
+				InputOption::VALUE_OPTIONAL,
+				'Donner explicitement la version à télécharger.',
+				'' // Par défaut, la dernière version stable
+			)			
 			->setAliases(array(
 				'update',
 				'up' // abbréviation commune pour "update"
@@ -32,8 +39,27 @@ class CoreMettreajour extends Command {
 				$output->writeln("<error>Votre installation de PHP doit pouvoir exécuter des commandes externes avec la fonction passthru().</error>");
 			}
 			else{
-				// On lance la commande SVN dans le répertoire courant
-				passthru('svn up .');
+				// Liste des branches acceptées
+				$branches_ok = array(
+					'2.1' => 'svn://trac.rezo.net/spip/branches/spip-2.1',
+					'3.0' => 'svn://trac.rezo.net/spip/branches/spip-3.0',
+					'trunk' => 'svn://trac.rezo.net/spip/spip',
+				);
+				// Branche séléctionnée
+				$branche = $input->getOption('branche');
+				if (isset($branche)) {
+					// On vérifie que l'on connait la version
+					if (!in_array($branche, array_keys($branches_ok))){
+						$output->writeln(array(
+							"<error>La version \"$branche\" n'est pas prise en charge.</error>",
+							'Branches supportées : <info>'.join('</info>, <info>', array_keys($branches_ok)).'</info>'
+						));
+					}				
+					passthru('svn switch '.$branches_ok[$branche].' .');
+				} else {
+					// On lance la commande SVN dans le répertoire courant
+					passthru('svn up .');				
+				}
 			}
 		}
 		else {

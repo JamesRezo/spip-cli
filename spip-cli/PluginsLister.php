@@ -57,8 +57,8 @@ class PluginsLister extends Command {
             include_spip('inc/filtres');
             $data = array_map(function ($plugin) {
                 return array(
-                    html_entity_decode(
-                        extraire_multi($plugin['nom'], 'fr')),
+                    trim(html_entity_decode(
+                        extraire_multi($plugin['nom'], 'fr'))),
                     $plugin['etat'],
                     joli_no_version($plugin['version']),
                 );

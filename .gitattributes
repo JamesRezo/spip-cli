@@ -14,6 +14,7 @@ spip-cli/PluginsActiver.php -text
 spip-cli/PluginsDesactiver.php -text
 spip-cli/PluginsLister.php -text
 spip-cli/TextePropre.php -text
+spip-cli/TexteTypo.php -text
 /spip.php -text
 /spip_completion.sh -text
 vendor/autoload.php -text

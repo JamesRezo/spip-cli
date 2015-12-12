@@ -6,11 +6,11 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class TextePropre extends Command {
+class TexteTypo extends Command {
 	protected function configure() {
 		$this
-			->setName('texte:propre')
-			->setDescription('Convertit du texte au format SPIP vers du HTML via la fonction "propre"')
+			->setName('texte:typo')
+			->setDescription('Convertit une phrase vers du HTML via la fonction "typo"')
 		;
 	}
 
@@ -24,7 +24,7 @@ class TextePropre extends Command {
 			$contenu = stream_get_contents(STDIN);
 
 			include_spip('inc/texte');
-			$output->write(trim(propre($contenu))."\n");
+			$output->write(typo($contenu)."\n");
 
 		}
 		else{

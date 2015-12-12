@@ -13,7 +13,7 @@ Pour connaître les commandes disponibles, lancer `spip` dans un shell
 ```
 $ spip
 
-Ligne de commande pour SPIP version 0.2.1
+Ligne de commande pour SPIP version 0.2.2
 
 Usage:
   [options] command [arguments]
@@ -41,10 +41,12 @@ core
   core:installer     Installer la base de données et le premier utilisateur.
   core:preparer      Préparer les fichiers pour installer SPIP correctement.
   core:telecharger   Télécharger SPIP dans un dossier (par défaut, la dernière version stable)
+(etc.)
 ```
 
-Dans la version 0.2.1, `spip-cli` permet :
+Dans la version 0.2.2, `spip-cli` permet :
 
 * de télécharger SPIP dans un dossier,
 * d'installer la base de données de SPIP et le premier utilisateur,
 * vider et activer/désactiver le cache.
+* utiliser les fonctions propre() et typo()

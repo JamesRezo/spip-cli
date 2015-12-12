@@ -13,7 +13,7 @@ sudo svn checkout svn://zone.spip.org/spip-zone/_outils_/spip-cli/trunk /opt/spi
 Sur Linux, pour pouvoir utiliser la commande `spip` dans un shell :
 
 ```
-sudo ln -s /opt/spip-cli/spip.php /usr/bin/spip
+sudo ln -s /opt/spip-cli/spip.php /usr/local/bin/spip
 ```
 
 ## Activer l'autocomplétion

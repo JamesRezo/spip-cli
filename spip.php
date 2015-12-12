@@ -192,7 +192,7 @@ if (($spip_racine = spip_chercher_racine()) and spip_charger($spip_racine)) {
     // charger toutes les commandes qui se trouvent dans le path de SPIP.
     $cwd = getcwd();
     chdir($spip_racine);
-    $commandes = find_all_in_path('spip-cli/', '.*[.]php');
+    $commandes = find_all_in_path('spip-cli/', '.*[.]php$');
     foreach ($commandes as $commande_fichier) {
         include_once $commande_fichier;
     }

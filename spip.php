@@ -6,6 +6,7 @@ $dossier_cli = dirname(__FILE__);
 
 include_once "$dossier_cli/vendor/autoload.php";
 use Symfony\Component\Console\Application;
+if( ! ini_get('date.timezone') ) { date_default_timezone_set('GMT'); }
 
 /**
  * Trouver toutes les sous-classes qui étendent une classe donnée

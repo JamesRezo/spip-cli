@@ -180,7 +180,7 @@ function spip_charger($spip_racine) {
 }
 
 // Création de la ligne de commande
-$spip = new Application('Ligne de commande pour SPIP', '0.2.2');
+$spip = new Application('Ligne de commande pour SPIP', '0.2.3');
 
 // Inclusion des fichiers contenant les commandes de base
 foreach (glob("$dossier_cli/spip-cli/*.php") as $commande_fichier) {

@@ -13,7 +13,7 @@ Pour connaître les commandes disponibles, lancer `spip` dans un shell
 ```
 $ spip
 
-Ligne de commande pour SPIP version 0.2.2
+Ligne de commande pour SPIP version 0.2.3
 
 Usage:
   [options] command [arguments]
@@ -44,7 +44,7 @@ core
 (etc.)
 ```
 
-Dans la version 0.2.2, `spip-cli` permet :
+Dans la version 0.2.3, `spip-cli` permet :
 
 * de télécharger SPIP dans un dossier,
 * d'installer la base de données de SPIP et le premier utilisateur,

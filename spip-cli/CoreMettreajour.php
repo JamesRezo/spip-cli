@@ -45,7 +45,7 @@ class CoreMettreajour extends Command {
 					'3.0' => 'svn://trac.rezo.net/spip/branches/spip-3.0',
 					'trunk' => 'svn://trac.rezo.net/spip/spip',
 				);
-				// Branche séléctionnée
+				// Branche sélectionnée
 				$branche = $input->getOption('branche');
 				if (isset($branche) && !empty($branche)) {
 					// On vérifie que l'on connait la version
@@ -54,11 +54,46 @@ class CoreMettreajour extends Command {
 							"<error>La version \"$branche\" n'est pas prise en charge.</error>",
 							'Branches supportées : <info>'.join('</info>, <info>', array_keys($branches_ok)).'</info>'
 						));
-					}				
+					}
 					passthru('svn switch '.$branches_ok[$branche].' .');
 				} else {
-					// On lance la commande SVN dans le répertoire courant
-					passthru('svn up .');				
+					// on vérifie d'abord qu'on est sur un spip sans modifs
+					exec('svn status --quiet --non-interactive .', $results, $err);
+					if ($err) {
+						$output->writeln(array("<error>Erreur SVN.</error>"));
+					} else {
+						$results = array_filter($results, function ($line) {
+							return preg_match(',^M,', $line);
+						});
+						if (count($results) > 0) {
+							$output->writeln(array(
+								"<error>Pas de mise à jour automatique car des fichiers ont été modifiés localement.</error>",
+								 join("\n", $results),
+								 '<info>Recherche des conflits…</info>'
+							));
+							exec('svn status --show-updates --quiet --non-interactive .', $results, $err);
+							if ($err) {
+								$output->writeln(array("<error>Erreur SVN.</error>"));
+							} else {
+								$results = array_filter($results, function ($line) {
+									return preg_match(',^M +[*],', $line);
+								});
+
+								if (count($results) == 0) {
+									$output->writeln(array("<info>Pas de conflit détecté, vous pouvez probablement lancer svn update.</info>"));
+								} else {
+									$output->writeln(array(
+									"<error>Les fichiers suivants sont peut-être en conflit;\nfaites attention si vous lancez svn update.</error>",
+										join ("\n", $results)
+									));
+								}
+							}
+						}
+						else {
+							// On lance la commande SVN dans le répertoire courant
+							passthru('svn update .');
+						}
+					}
 				}
 			}
 		}

@@ -10,6 +10,7 @@ spip-cli/CoreInstaller.php -text
 spip-cli/CoreMettreajour.php -text
 spip-cli/CorePreparer.php -text
 spip-cli/CoreTelecharger.php -text
+spip-cli/IntegraalGenerer.php -text
 spip-cli/PluginsActiver.php -text
 spip-cli/PluginsDesactiver.php -text
 spip-cli/PluginsLister.php -text

@@ -43,6 +43,7 @@ class CoreMettreajour extends Command {
 				$branches_ok = array(
 					'2.1' => 'svn://trac.rezo.net/spip/branches/spip-2.1',
 					'3.0' => 'svn://trac.rezo.net/spip/branches/spip-3.0',
+					'3.1' => 'svn://trac.rezo.net/spip/branches/spip-3.1',
 					'trunk' => 'svn://trac.rezo.net/spip/spip',
 				);
 				// Branche sélectionnée

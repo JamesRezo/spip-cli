@@ -58,7 +58,7 @@ class ServerLocate extends Command {
 		$rep = dirname(dirname($filename));
 		$name = basename($rep);
 		// si le nom est peu informatif, remonter encore d'un cran
-		if (in_array($name, ['www', 'dev', 'old', 'site', 'Web', 'public_html'])) $name = basename(dirname($rep)).'/'.$name;
+		if (in_array(strtolower($name), ['www', 'dev', 'old', '_old', 'maj', '_maj', 'site', 'web', 'spip', 'public_html'])) $name = basename(dirname($rep)).'/'.$name;
 
 		$a = @file_get_contents($filename);
 

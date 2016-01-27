@@ -49,7 +49,7 @@ class ServerLocate extends Command {
 			return preg_match(",/inc_version\.php[3]?$,", $x);
 		});
 		
-		return $files;
+		return array_unique($files);
 	}
 
 	protected function analyser_site($filename) {
@@ -57,6 +57,8 @@ class ServerLocate extends Command {
 		$ecrire = basename(dirname($filename));
 		$rep = dirname(dirname($filename));
 		$name = basename($rep);
+		// si le nom est peu informatif, remonter encore d'un cran
+		if (in_array($name, ['www', 'dev', 'old', 'site', 'Web', 'public_html'])) $name = basename(dirname($rep)).'/'.$name;
 
 		$a = @file_get_contents($filename);
 

@@ -250,7 +250,7 @@ class CoreInstaller extends Command {
 			
 			// On peut ajouter l'admin
 			if ($id_auteur = $this->ajouter_admin($nom, $login, $pass, $email) and $id_auteur > 0){
-				$output->writeln("<info>« $nom » est bien admin du site (ID $id_auteur).</info>");
+				$output->writeln("<info>« $nom » est admin du site (ID $id_auteur) avec le mot de passe « $pass ».</info>");
 			}
 			else {
 				$output->writeln("<error>Erreur lors de l'ajout d'un admin « $nom ».</error>");

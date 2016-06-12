@@ -15,6 +15,7 @@ spip-cli/PluginsActiver.php -text
 spip-cli/PluginsDepoter.php -text
 spip-cli/PluginsDesactiver.php -text
 spip-cli/PluginsLister.php -text
+spip-cli/PluginsTelecharger.php -text
 spip-cli/ServerLocate.php -text
 spip-cli/TextePropre.php -text
 spip-cli/TexteTypo.php -text

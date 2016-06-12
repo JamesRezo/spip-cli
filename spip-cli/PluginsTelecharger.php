@@ -87,6 +87,9 @@ class PluginsTelecharger extends Command {
 
 				$actionneur->deverrouiller();
 				$actionneur->sauver_actions();
+
+            	include_spip('inc/svp_depoter_local');
+            	svp_actualiser_paquets_locaux();
             }
         }
     }

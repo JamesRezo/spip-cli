@@ -38,6 +38,20 @@ class PluginsTelecharger extends Command {
             }
 
             $output->writeln("<comment>Liste des plugins demandés : ".implode(',', $plugins_prefix)."</comment>");
+
+            include_spip('inc/svp_decider');
+            $decideur = new Decideur;
+
+            foreach ($plugins_prefix as $prefix) {
+                $output->writeln("<comment>Plugin en cours d'installation : ".$prefix."</comment>");
+                $infos = $decideur->infos_courtes(
+                        'UPPER(pl.prefixe) = LOWER("'.strtoupper($prefix).'")'
+                );
+                if (empty($infos['i'])) {
+                    $output->writeln("<error>Le plugin ".$prefix." n'est pas référencé</error>");
+                    continue;
+                }
+            }
         }
     }
 }

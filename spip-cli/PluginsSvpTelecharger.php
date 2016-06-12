@@ -62,14 +62,12 @@ class PluginsSvpTelecharger extends Command
 				$res = $decideur->verifier_dependances($a_installer);
 				
 				if (!$decideur->ok) {
-					$erreurs['decideur_erreurs'] = array();
+					$output->writeln("<error>Le plugin ".$prefix." ne peut être installé :</error>");
 					foreach ($decideur->err as $id => $errs) {
 						foreach ($errs as $err) {
-							$erreurs['decideur_erreurs'][] = $err;
+							$output->writeln("<error>    ".$err."</error>");
 						}
 					}
-					$output->writeln("<error>Le plugin ".$prefix." ne peut être installé</error>");
-					$output->writeln("<error>    ".var_dump($erreurs['decideur_erreurs'], true)."</error>");
 					continue;
 				}
 

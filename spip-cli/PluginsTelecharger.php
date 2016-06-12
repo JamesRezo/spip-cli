@@ -51,6 +51,21 @@ class PluginsTelecharger extends Command {
                     $output->writeln("<error>Le plugin ".$prefix." n'est pas référencé</error>");
                     continue;
                 }
+                $a_installer[key($infos['i'])] = 'geton';
+	            $decideur->erreur_sur_maj_introuvable = false;
+                $res = $decideur->verifier_dependances($a_installer);
+
+            	if (!$decideur->ok) {
+            		$erreurs['decideur_erreurs'] = array();
+            		foreach ($decideur->err as $id => $errs) {
+            			foreach ($errs as $err) {
+            				$erreurs['decideur_erreurs'][] = $err;
+            			}
+            		}
+                    $output->writeln("<error>Le plugin ".$prefix." ne peut être installé</error>");
+                    $output->writeln("<error>    ".var_dump($erreurs['decideur_erreurs'],true)."</error>");
+                    continue;
+                }
             }
         }
     }

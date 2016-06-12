@@ -36,6 +36,8 @@ class PluginsTelecharger extends Command {
                 $output->writeln("<error>Aucun plugin demandé</error>");
                 return;
             }
+
+            $output->writeln("<comment>Liste des plugins demandés : ".implode(',', $plugins_prefix)."</comment>");
         }
     }
 }

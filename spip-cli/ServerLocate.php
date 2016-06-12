@@ -69,10 +69,10 @@ class ServerLocate extends Command {
 			$version_spip = "<error>version?</error>";
 		}
 
-		$report = [
+		$report = array(
 			"Version" => $version_spip,
 			"Répertoire" => $rep,
-		];
+		);
 
 
 		// Regarder les bases de données connectées, etc, etc.

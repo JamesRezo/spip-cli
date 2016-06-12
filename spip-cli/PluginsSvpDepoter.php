@@ -9,8 +9,10 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\Question;
 use Symfony\Component\Console\Question\ConfirmationQuestion;
 
-class PluginsSvpDepoter extends Command {
-    protected function configure() {
+class PluginsSvpDepoter extends Command
+{
+    protected function configure()
+	{
         $this
             ->setName('plugins:svp:depoter')
             ->setDescription('Ajouter un depot')
@@ -22,7 +24,8 @@ class PluginsSvpDepoter extends Command {
         ;
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output) {
+    protected function execute(InputInterface $input, OutputInterface $output)
+	{
         global $spip_loaded;
         global $spip_racine;
         global $cwd;
@@ -35,7 +38,7 @@ class PluginsSvpDepoter extends Command {
 
             $ajouter= svp_ajouter_depot($url_depot);
 
-            if ( ! $ajouter) {
+            if (! $ajouter) {
                 $output->writeln("<error>Impossible d'ajouter le dépot $url</error>");
             } else {
                 $output->writeln("<info>Le dépot $url a été ajouté</info>");

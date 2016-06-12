@@ -40,7 +40,10 @@ class PluginsTelecharger extends Command {
             $output->writeln("<comment>Liste des plugins demandés : ".implode(',', $plugins_prefix)."</comment>");
 
             include_spip('inc/svp_decider');
+    		include_spip('inc/svp_actionner');
+
             $decideur = new Decideur;
+        	$actionneur = new Actionneur();
 
             foreach ($plugins_prefix as $prefix) {
                 $output->writeln("<comment>Plugin en cours d'installation : ".$prefix."</comment>");
@@ -71,6 +74,19 @@ class PluginsTelecharger extends Command {
                 foreach($actions as $action) {
                     $output->writeln("<comment>\t".$action."</comment>");
                 }
+            	foreach ($decideur->todo as $_todo) {
+            		$todo[$_todo['i']] = $_todo['todo'];
+            	}
+            	$actionneur->ajouter_actions($todo);
+            	$actionneur->verrouiller();
+            	$actionneur->sauver_actions();
+
+                while ($res = $actionneur->one_action()) {
+                    $output->writeln("<comment>".$res['n']." action réalisée : ".$res['todo']."</comment>");
+                }
+
+				$actionneur->deverrouiller();
+				$actionneur->sauver_actions();
             }
         }
     }

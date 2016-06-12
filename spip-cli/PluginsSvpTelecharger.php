@@ -9,10 +9,10 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\Question;
 use Symfony\Component\Console\Question\ConfirmationQuestion;
 
-class PluginsTelecharger extends Command {
+class PluginsSvpTelecharger extends Command {
     protected function configure() {
         $this
-            ->setName('plugins:telecharger')
+            ->setName('plugins:svp:telecharger')
             ->setDescription('Telecharger un plugin depuis les dépôts.')
             ->addArgument(
                 'prefix',

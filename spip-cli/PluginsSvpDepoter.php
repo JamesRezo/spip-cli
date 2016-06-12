@@ -9,10 +9,10 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\Question;
 use Symfony\Component\Console\Question\ConfirmationQuestion;
 
-class PluginsDepoter extends Command {
+class PluginsSvpDepoter extends Command {
     protected function configure() {
         $this
-            ->setName('plugins:depoter')
+            ->setName('plugins:svp:depoter')
             ->setDescription('Ajouter un depot')
             ->addArgument(
                 'url',

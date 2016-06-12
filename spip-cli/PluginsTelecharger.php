@@ -66,6 +66,11 @@ class PluginsTelecharger extends Command {
                     $output->writeln("<error>    ".var_dump($erreurs['decideur_erreurs'],true)."</error>");
                     continue;
                 }
+                $actions = $decideur->presenter_actions('todo');
+                $output->writeln("<comment>Pour l'installation du plugin ".$prefix." les actions suivantes sont prévues : </comment>");
+                foreach($actions as $action) {
+                    $output->writeln("<comment>\t".$action."</comment>");
+                }
             }
         }
     }

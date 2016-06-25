@@ -67,6 +67,11 @@ class PluginsActiver extends Command {
                 $plugins = $input->getArgument('plugins');
             }
 
+			// Si on est en mode "All" et qu'il n'y a pas de plugin, il n'y a rien a faire
+			if (!$plugins and $input->getOption('all')) {
+				return;
+			}
+
             if ( ! $plugins) {
 
                 /* Si pas de plugin(s) spécifiés, on demande */

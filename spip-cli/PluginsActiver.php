@@ -25,6 +25,12 @@ class PluginsActiver extends Command {
                 InputOption::VALUE_NONE,
                 "Activer tous les plugins disponibles."
             )
+			->addOption(
+				'yes',
+				'y',
+                InputOption::VALUE_NONE,
+				'Activer les plugins sans poser de question'
+			)
         ;
     }
 
@@ -88,9 +94,12 @@ class PluginsActiver extends Command {
             /* On liste le(s) plugin(s) qui seront activés et on
                demande confirmation. */
             $helper = $this->getHelper('question');
-            $confirmer = new ConfirmationQuestion("Vous allez activer les plugins suivants : " . implode(', ', $plugins) . ".\nÊtes-vous certain-e de vouloir continuer ? ", false);
 
-            if ( ! $helper->ask($input, $output, $confirmer)) return;
+			if (!$input->getOption('yes')) {
+				$confirmer = new ConfirmationQuestion("Vous allez activer les plugins suivants : " . implode(', ', $plugins) . ".\nÊtes-vous certain-e de vouloir continuer ? ", false);
+
+				if ( ! $helper->ask($input, $output, $confirmer)) return;
+			}
 
             /* Et enfin, on désactive le(s) plugin(s) */
             $dir_uns = array();

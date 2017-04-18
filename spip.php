@@ -144,7 +144,8 @@ function spip_charger($spip_racine) {
 		$hash_recherche_strict,
 		$ldap_present,
 		$meta,
-		$connect_id_rubrique;
+		$connect_id_rubrique,
+		$puce;
 
 	// Pour que les include dans les fichiers php de SPIP fonctionnent correctement,
 	// il faut être à la racine du site.

@@ -91,7 +91,7 @@ class PluginsDesactiver extends Command {
             if ( ! $helper->ask($input, $output, $confirmer)) return;
 
             /* Et enfin, on désactive le(s) plugin(s) */
-            $dir_uns = array();
+            $dir_un = array();
             foreach ($plugins as $prefixe) {
                 if ( ! isset($actifs[strtoupper($prefixe)])){
                     $output->writeln("<error>Le plugin $prefixe est introuvable dans les plugins actifs.</error>");

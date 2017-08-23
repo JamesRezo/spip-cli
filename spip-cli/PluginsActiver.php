@@ -107,7 +107,7 @@ class PluginsActiver extends Command {
 			}
 
             /* Et enfin, on désactive le(s) plugin(s) */
-            $dir_uns = array();
+            $dir_un = array();
             foreach ($plugins as $prefixe) {
                 if ( ! in_array($prefixe, $disponibles)) {
                     $output->writeln("<error>Le plugin $prefixe est introuvable dans les plugins disponibles.</error>");

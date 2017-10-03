@@ -33,6 +33,7 @@ class PluginsSvpDepoter extends Command
         if ($spip_loaded) {
             chdir($spip_racine);
 
+            include_spip('inc/filtres');
             include_spip('inc/svp_depoter_distant');
             $url_depot = $input->getArgument('url');
 

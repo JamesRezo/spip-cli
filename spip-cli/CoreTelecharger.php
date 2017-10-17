@@ -16,7 +16,7 @@ class CoreTelecharger extends Command {
 				'b',
 				InputOption::VALUE_OPTIONAL,
 				'Donner explicitement la version à télécharger.',
-				'3.1' // Par défaut, la dernière version stable
+				'3.2' // Par défaut, la dernière version stable
 			)
 			->setAliases(array(
 				'dl' // abbréviation commune pour "download"
@@ -33,6 +33,7 @@ class CoreTelecharger extends Command {
 			'2.1' => 'svn://trac.rezo.net/spip/branches/spip-2.1',
 			'3.0' => 'svn://trac.rezo.net/spip/branches/spip-3.0',
 			'3.1' => 'svn://trac.rezo.net/spip/branches/spip-3.1',
+			'3.2' => 'svn://trac.rezo.net/spip/branches/spip-3.2',
 			'trunk' => 'svn://trac.rezo.net/spip/spip',
 		);
 		// Branche séléctionnée

@@ -6,6 +6,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ChoiceQuestion;
+use Symfony\Component\Console\Question\Question;
 
 /**
  * Générer un nouveau projet à partir de l'échafaudage Intégraal
@@ -20,12 +21,12 @@ class IntegraalGenerer extends Command {
 			->setDescription('Génèrer un nouveau projet à partir de l‘échafaudage Intégraal.')
 			->addArgument(
 				'prefixe',
-				InputArgument::REQUIRED,
+				InputArgument::OPTIONAL,
 				'Préfixe du nouveau projet'
 			)
 			->addArgument(
 				'nom',
-				InputArgument::REQUIRED,
+				InputArgument::OPTIONAL,
 				'Nom humain du projet'
 			)
 			->addOption(
@@ -51,8 +52,7 @@ class IntegraalGenerer extends Command {
 				'theme',
 				't',
 				InputOption::VALUE_REQUIRED,
-				'Version du thème à utiliser : gulp ou scssphp',
-				'gulp'
+				'Version du thème à utiliser : gulp ou scssphp'
 			)
 		;
 	}
@@ -60,9 +60,6 @@ class IntegraalGenerer extends Command {
 	protected function execute(InputInterface $input, OutputInterface $output) {
 		// On récupère les arguments
 		$prefixe = $input->getArgument('prefixe');
-		if (!$nom = $input->getArgument('nom')) {
-			$nom = $prefixe;
-		}
 		
 		// On récupère les options
 		$chemin_integraal = rtrim($input->getOption('chemin_integraal'), '/') . '/';
@@ -70,19 +67,31 @@ class IntegraalGenerer extends Command {
 		$url = $input->getOption('url');
 		$version_theme = $input->getOption('theme');
 		
-		// [TODO] Si des arguments nécessaires manquent, on pose des questions
-		/*
+		// Si des arguments nécessaires manquent, on pose des questions
+		if (!$prefixe) {
+			$helper = $this->getHelper('question');
+			$question_prefixe = new Question('Préfixe du projet : ');
+			$prefixe = $helper->ask($input, $output, $question_prefixe);
+			$output->writeln("<info>Préfixe utilisé : $prefixe</info>");
+		}
+		if (!$nom) {
+			$helper = $this->getHelper('question');
+			$question_nom = new Question('Nom humain du projet : ');
+			if (!$nom = $helper->ask($input, $output, $question_nom)) {
+				$nom = $prefixe;
+			}
+			$output->writeln("<info>Nom utilisé : $nom</info>");
+		}
 		if (!$version_theme) {
 			$helper = $this->getHelper('question');
 			$question_theme = new ChoiceQuestion(
-				'Quelle version du thème utiliser ? (défaut : gulp)',
+				'Version du thème à utiliser',
 				array('gulp', 'scssphp'),
 				0
 			);
 			$version_theme = $helper->ask($input, $output, $question_theme);
-			$output->writeln('Vous avez choisi : '.$version_theme);
+			$output->writeln("Version choisie : $version_theme");
 		}
-		*/
 		
 		// On se déplace dans le dossier des plugins si on est dans un SPIP
 		if (

@@ -51,7 +51,7 @@ class IntegraalGenerer extends Command {
 				'theme',
 				't',
 				InputOption::VALUE_REQUIRED,
-				'Version du thème à utiliser',
+				'Version du thème à utiliser : gulp ou scssphp',
 				'gulp'
 			)
 		;

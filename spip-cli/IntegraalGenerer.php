@@ -110,6 +110,10 @@ class IntegraalGenerer extends Command {
 				chdir($prefixe);
 				
 				// Retrouver le chemin correspondant à la version du thème choisie
+				if (!in_array($version_theme, array('gulp', 'scssphp'))) {
+					$version_theme = 'gulp';
+					$output->writeln("<error>Version du thème inconnue. La version « $version_theme » sera utilisée</error>");
+				}
 				$chemins_theme = array(
 					'gulp'    => 'theme/trunk',
 					'scssphp' => 'theme/branches/scssphp',

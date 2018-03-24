@@ -1,8 +1,13 @@
 {
-    "name": "spip/spip-cli",
-    "require": {
-        "php": ">=5.3.3",
-        "symfony/console": "^4.0"
-    },
-    "minimum-stability": "stable"
+	"name": "spip/spip-cli",
+	"minimum-stability": "stable",
+	"require": {
+			"php": "^5.4|^7",
+			"symfony/console": "^2.8"
+	},
+	"config": {
+			"platform": {
+					"php": "5.4.45"
+			}
+	}
 }

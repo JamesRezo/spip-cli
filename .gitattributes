@@ -1,5 +1,4 @@
 * text=auto !eol
-/INSTALL.md -text
 /README.md -text
 /composer.json -text
 /composer.lock -text

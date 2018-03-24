@@ -2,11 +2,11 @@
 
 spip-cli est un outil pour commander SPIP depuis la ligne de commandes.
 
-## Installer spip-cli
+## Documentation
 
-Voir le fichier [./INSTALL.md](INSTALL.md).
+https://contrib.spip.net/SPIP-Cli
 
-## Utiliser spip-cli
+## Utiliser spip-cli
 
 Pour connaître les commandes disponibles, lancer `spip` dans un shell
 

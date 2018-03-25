@@ -15,13 +15,13 @@ class CoreListerVersions extends Command {
 		$this
 			->setName('core:listerversions')
 			->setDescription('Liste les versions de SPIP')
-			//~ ->addOption(
-				//~ 'branche',
-				//~ 'b',
-				//~ InputOption::VALUE_OPTIONAL,
-				//~ 'Donner explicitement la version à télécharger.',
-				//~ '3.2' // Par défaut, la dernière version stable
-			//~ )
+			->addOption(
+				'type',
+				't',
+				InputOption::VALUE_OPTIONAL,
+				'branches ou tags ?',
+				'' // Par défaut, tout
+			)
 			->setAliases(array(
 				'versions'
 			))
@@ -32,7 +32,7 @@ class CoreListerVersions extends Command {
 		// On travaille dans le dossier courant
 		$dossier = getcwd();
 		
-		//~ $branche = $input->getOption('branche');
+		$type = $input->getOption('type');
 		
 		//~ // On vérifie qu'on est pas déjà dans une installation de SPIP !
 		//~ if ($GLOBALS['spip_loaded']) {
@@ -56,6 +56,11 @@ class CoreListerVersions extends Command {
 		// Si c'est bon on continue
 		else{
 			$versions = $this->get_versions();
+			
+			// Seulement ce type
+			if (array_key_exists($type, $versions)) {
+				$versions = array_intersect_key($versions, array($type=>'yes'));
+			}
 			
 			foreach ($versions as $type => $numeros) {
 				$output->writeln("<question>$type</question>");

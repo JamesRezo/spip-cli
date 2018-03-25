@@ -92,6 +92,7 @@ class CoreListerVersions extends Command {
 			
 			// On transforme en tableau et nettoie
 			$versions['branches'] = $this->svn_to_array($liste_branches, 'branches');
+			$versions['branches']['trunk'] = 'svn://trac.rezo.net/spip/spip';
 		}
 		
 		if ($type != 'tags') {

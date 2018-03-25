@@ -77,10 +77,10 @@ class CoreListerVersions extends Command {
 		$tags = array_flip($versions['tags']);
 		
 		if ($xy) {
-			$masque = "/$xy.\d+$/";
+			$masque = "/^$xy\.\d+$/";
 		}
 		else {
-			$masque = '/\d+\.\d+\.\d+$/';
+			$masque = '/^\d+\.\d+\.\d+$/';
 		}
 		
 		// On ne garde que les trucs stables
@@ -101,10 +101,10 @@ class CoreListerVersions extends Command {
 		$branches = array_flip($versions['branches']);
 		
 		if ($x) {
-			$masque = "/$x.\d+$/";
+			$masque = "/^$x.\d+$/";
 		}
 		else {
-			$masque = '/\d+\.\d+$/';
+			$masque = '/^\d+\.\d+$/';
 		}
 		
 		// On ne garde que les trucs stables
@@ -162,7 +162,7 @@ class CoreListerVersions extends Command {
 		$temp = explode("\n", $svn);
 		
 		foreach ($temp as $dossier) {
-			if ($cle = preg_replace('|(spip-)?(.*?)(-stable)?/?|i', '$2', $dossier)) {
+			if ($cle = preg_replace('|(spip-)?(.*?)/?|i', '$2', $dossier)) {
 				$liste[$cle] = "{$this->chemin_svn_racine}/$type/$dossier";
 			}
 		}

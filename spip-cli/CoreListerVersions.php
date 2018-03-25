@@ -58,7 +58,7 @@ class CoreListerVersions extends Command {
 			foreach ($versions as $type => $numeros) {
 				$output->writeln("<question>$type</question>");
 				
-				foreach ($numeros as $numero) {
+				foreach ($numeros as $numero => $url) {
 					$output->writeln("$numero");
 				}
 			}
@@ -76,7 +76,12 @@ class CoreListerVersions extends Command {
 			ob_end_clean();
 			
 			// On transforme en tableau et nettoie
-			$versions['branches'] = $this->svn_to_array($liste_branches);
+			$liste_branches = $this->svn_to_array($liste_branches);
+			
+			// On garde les URL
+			foreach ($liste_branches as $version) {
+				$versions['branches'][$version] = "{$this->chemin_svn_racine}/branches/$version";
+			}
 		}
 		
 		if ($type != 'tags') {
@@ -87,7 +92,12 @@ class CoreListerVersions extends Command {
 			ob_end_clean();
 			
 			// On transforme en tableau et nettoie
-			$versions['tags'] = $this->svn_to_array($liste_tags);
+			$liste_tags = $this->svn_to_array($liste_tags);
+			
+			// On garde les URL
+			foreach ($liste_tags as $version) {
+				$versions['tags'][$version] = "{$this->chemin_svn_racine}/tags/$version";
+			}
 		}
 		
 		return $versions;

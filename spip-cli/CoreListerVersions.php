@@ -8,6 +8,8 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class CoreListerVersions extends Command {
 	private $chemin_svn_racine = 'svn://trac.rezo.net/spip';
+	private $versions = array();
+	private $last = '';
 	
 	protected function configure() {
 		$this
@@ -53,7 +55,7 @@ class CoreListerVersions extends Command {
 		}
 		// Si c'est bon on continue
 		else{
-			$versions = $this->lister_versions();
+			$versions = $this->get_versions();
 			
 			foreach ($versions as $type => $numeros) {
 				$output->writeln("<question>$type</question>");
@@ -63,6 +65,14 @@ class CoreListerVersions extends Command {
 				}
 			}
 		}
+	}
+	
+	public function get_versions() {
+		if (!$this->versions) {
+			$this->versions = $this->lister_versions();
+		}
+		
+		return $this->versions;
 	}
 	
 	public function lister_versions($type='') {
@@ -76,12 +86,7 @@ class CoreListerVersions extends Command {
 			ob_end_clean();
 			
 			// On transforme en tableau et nettoie
-			$liste_branches = $this->svn_to_array($liste_branches);
-			
-			// On garde les URL
-			foreach ($liste_branches as $version) {
-				$versions['branches'][$version] = "{$this->chemin_svn_racine}/branches/$version";
-			}
+			$versions['branches'] = $this->svn_to_array($liste_branches, 'branches');
 		}
 		
 		if ($type != 'tags') {
@@ -92,22 +97,19 @@ class CoreListerVersions extends Command {
 			ob_end_clean();
 			
 			// On transforme en tableau et nettoie
-			$liste_tags = $this->svn_to_array($liste_tags);
-			
-			// On garde les URL
-			foreach ($liste_tags as $version) {
-				$versions['tags'][$version] = "{$this->chemin_svn_racine}/tags/$version";
-			}
+			$versions['tags'] = $this->svn_to_array($liste_tags, 'tags');
 		}
 		
 		return $versions;
 	}
 	
-	private function svn_to_array($svn) {
-		$liste = explode("\n", $svn);
+	private function svn_to_array($svn, $type) {
+		$liste = array();
+		$temp = explode("\n", $svn);
 		
-		foreach ($liste as $cle=>$dossier) {
-			$liste[$cle] = preg_replace('|(spip-)?(.*?)(-stable)?/?|i', '$2', $dossier);
+		foreach ($temp as $dossier) {
+			$cle = preg_replace('|(spip-)?(.*?)(-stable)?/?|i', '$2', $dossier);
+			$liste[$cle] = "{$this->chemin_svn_racine}/$type/$dossier";
 		}
 		$liste = array_filter(array_unique($liste));
 		

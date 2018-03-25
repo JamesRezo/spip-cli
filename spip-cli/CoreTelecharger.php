@@ -28,14 +28,11 @@ class CoreTelecharger extends Command {
 		// On travaille dans le dossier courant
 		$dossier = getcwd();
 		
+		$lister_versions = $this->getApplication()->find('core:listerversions');
+		$versions = $lister_versions->get_versions();
+		
 		// Liste des branches acceptées
-		$branches_ok = array(
-			'2.1' => 'svn://trac.rezo.net/spip/branches/spip-2.1',
-			'3.0' => 'svn://trac.rezo.net/spip/branches/spip-3.0',
-			'3.1' => 'svn://trac.rezo.net/spip/branches/spip-3.1',
-			'3.2' => 'svn://trac.rezo.net/spip/branches/spip-3.2',
-			'trunk' => 'svn://trac.rezo.net/spip/spip',
-		);
+		$branches_ok = $versions['branches'];
 		// Branche séléctionnée
 		$branche = $input->getOption('branche');
 		
@@ -58,7 +55,7 @@ class CoreTelecharger extends Command {
 			}
 			// Si c'est bon on continue
 			else{
-				$output->writeln("<info>C'est parti pour le téléchargement de la version $branche !</info>");
+				$output->writeln("<info>C'est parti pour le téléchargement de la branche $branche !</info>");
 			
 				// On lance la commande SVN dans le répertoire courant
 				passthru('svn co '.$branches_ok[$branche].' .');

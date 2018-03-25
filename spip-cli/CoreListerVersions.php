@@ -72,6 +72,54 @@ class CoreListerVersions extends Command {
 		}
 	}
 	
+	public function get_last_release($xy='') {
+		$versions = $this->get_versions();
+		$tags = array_flip($versions['tags']);
+		
+		if ($xy) {
+			$masque = "/$xy.\d+$/";
+		}
+		else {
+			$masque = '/\d+\.\d+\.\d+$/';
+		}
+		
+		// On ne garde que les trucs stables
+		$stables = array_filter(
+			$tags,
+			function ($cle) use ($masque) {
+				return preg_match($masque, $cle);
+			}
+		);
+		
+		// On ne renvoit que la dernière version
+		natsort($stables);
+		return array_pop($stables);
+	}
+	
+	public function get_last_branche($x='') {
+		$versions = $this->get_versions();
+		$branches = array_flip($versions['branches']);
+		
+		if ($x) {
+			$masque = "/$x.\d+$/";
+		}
+		else {
+			$masque = '/\d+\.\d+$/';
+		}
+		
+		// On ne garde que les trucs stables
+		$stables = array_filter(
+			$branches,
+			function ($cle) use ($masque) {
+				return preg_match($masque, $cle);
+			}
+		);
+		
+		// On ne renvoit que la dernière version
+		natsort($stables);
+		return array_pop($stables);
+	}
+	
 	public function get_versions() {
 		if (!$this->versions) {
 			$this->versions = $this->lister_versions();

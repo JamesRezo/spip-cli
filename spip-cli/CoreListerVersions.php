@@ -108,8 +108,9 @@ class CoreListerVersions extends Command {
 		$temp = explode("\n", $svn);
 		
 		foreach ($temp as $dossier) {
-			$cle = preg_replace('|(spip-)?(.*?)(-stable)?/?|i', '$2', $dossier);
-			$liste[$cle] = "{$this->chemin_svn_racine}/$type/$dossier";
+			if ($cle = preg_replace('|(spip-)?(.*?)(-stable)?/?|i', '$2', $dossier)) {
+				$liste[$cle] = "{$this->chemin_svn_racine}/$type/$dossier";
+			}
 		}
 		$liste = array_filter(array_unique($liste));
 		

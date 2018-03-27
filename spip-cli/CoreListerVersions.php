@@ -34,22 +34,6 @@ class CoreListerVersions extends Command {
 		
 		$type = $input->getOption('type');
 		
-		//~ // On vérifie qu'on est pas déjà dans une installation de SPIP !
-		//~ if ($GLOBALS['spip_loaded']) {
-			//~ $output->writeln('<info>Vous êtes déjà dans une installation de SPIP '.$GLOBALS['spip_version_branche'].'.</info> <comment>Téléchargement annulé.</comment>');
-		//~ }
-		//~ // Sinon c'est bon on peut télécharger SPIP
-		//~ else {
-			//~ // On vérifie que l'on connait la version
-			//~ if (!in_array($branche, array_keys($branches_ok))){
-				//~ $output->writeln(array(
-					//~ "<error>La version \"$branche\" n'est pas prise en charge.</error>",
-					//~ 'Branches supportées : <info>'.join('</info>, <info>', array_keys($branches_ok)).'</info>'
-				//~ ));
-			//~ }
-			//~ // Si c'est bon, on teste si on peut utiliser "passthru"
-			//~ else
-			
 		if (!function_exists('passthru')) {
 			$output->writeln("<error>Votre installation de PHP doit pouvoir exécuter des commandes externes avec la fonction passthru().</error>");
 		}

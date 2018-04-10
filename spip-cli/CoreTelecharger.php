@@ -169,7 +169,7 @@ class CoreTelecharger extends Command {
 			$output->writeln("<info>C'est parti pour le téléchargement de la {$this->version_type} \"{$this->version_precise}\" !</info>");
 			
 			// On lance la commande SVN dans le répertoire courant
-			passthru("svn co {$this->url}");
+			passthru("svn co {$this->url} .");
 		}
 	}
 	

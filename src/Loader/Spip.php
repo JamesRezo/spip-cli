@@ -106,7 +106,21 @@ class Spip {
 	}
 
 	public function getPathConnect() {
-		return $this->getPathFile($this->connect);
+		return $this->getSiteFile($this->connect);
+	}
+
+	/**
+	 *  Retourne un chemin complet vers un fichier d’un site SPIP
+	 *  (pour config, local, tmp, IMG) qui peut être à la racine
+	 *  ou dans le répertoire sites/xxx/
+	 *  @param string $path
+	 *  @return string Chemin complet
+	 */
+	public function getSiteFile($path) {
+		if (defined('_DIR_SITE')) {
+			return $this->getPathFile(_DIR_SITE . $path);
+		}
+		return $this->getPathFile($path);
 	}
 
 	/**
@@ -205,7 +219,9 @@ class Spip {
 	 */
 	protected function preparerPourInstallation() {
 		// Si jamais la base n'est pas installé on anhile la redirection et on affirme qu'on est sur la page d'installation
-		if (!is_file($this->connect)) {
+		// Seulement si 'HTTP_HOST' n’a pas été défini (ce qui soulignerait que l’on serait sur un spip mutualisé
+		// dont on a indiqué l’url — afin que le mes_options retrouve le bon dossier sites/ ensuite)
+		if (empty($_SERVER['HTTP_HOST']) and !is_file($this->connect)) {
 			$_GET['exec'] = 'install';
 			define('_FILE_CONNECT', 'config/connect.tmp.php');
 		}

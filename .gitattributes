@@ -23,6 +23,8 @@ src/Command/PluginsLister.php -text
 src/Command/PluginsSvpDepoter.php -text
 src/Command/PluginsSvpTelecharger.php -text
 src/Command/ServerLocate.php -text
+src/Command/TestSpipCommand.php -text
+src/Command/TestStyleCommand.php -text
 src/Command/TextePropre.php -text
 src/Command/TexteTypo.php -text
 src/Console/Style/SpipCliStyle.php -text

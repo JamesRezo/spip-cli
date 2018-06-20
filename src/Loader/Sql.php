@@ -153,4 +153,14 @@ class Sql {
 		}
 		return $sqlite;
 	}
+
+	public function getAdresseSite() {
+		/** @var \PDO $pdo */
+		$pdo = $this->getPdo();
+		$query = $pdo->prepare('SELECT valeur FROM spip_meta WHERE nom=:nom');
+		$query->bindValue(':nom', 'adresse_site', \PDO::PARAM_STR);
+		$query->execute();
+		$adr = $query->fetchColumn();
+		return trim($adr);
+	}
 }

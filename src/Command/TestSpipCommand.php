@@ -67,6 +67,7 @@ class TestSpipCommand extends Command
 			/** @var Spip $spip */
 			$spip = $this->getApplication()->getService('spip.loader');
 			$spip->load();
+			$spip->chdir(); // grml
 		} catch (\Exception $e) {
 			$io->fail('Chargement de SPIP en erreur !');
 			$io->fail($e->getMessage());

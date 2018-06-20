@@ -18,6 +18,9 @@ class Spip {
 	/** @var string Chemin du connecteur SQL */
 	protected $connect = 'config/connect.php';
 
+	/** @var string Nom du répertoire théorique des sites, si mutualisation */
+	protected $dir_sites = 'sites';
+
 	/** @var string */
 	private $directory;
 
@@ -37,8 +40,13 @@ class Spip {
 	public function __construct($directory = null) {
 		if (is_null($directory)) {
 			$directory = $this->chercher_racine_spip();
+			if ($directory) {
+				$this->directory = rtrim(Files::formatPath($directory), DIRECTORY_SEPARATOR);
+				$this->trouver_host_si_mutualisation();
+			}
+		} else {
+			$this->directory = rtrim(Files::formatPath($directory), DIRECTORY_SEPARATOR);
 		}
-		$this->directory = rtrim(Files::formatPath($directory), DIRECTORY_SEPARATOR);
 	}
 
 
@@ -69,6 +77,51 @@ class Spip {
 	}
 
 	/**
+	 * Si le répertoire d’exécution de spip-cli est dans un site mutualisé,
+	 * ie quelque part dans `sites/truc.tld/qqc`, alors, déclarer à SPIP l’adresse
+	 * du site concerné (dans http_host), si on arrive à le calculer
+	 * (en se connectant au sql du site via PDO)
+	 *
+	 * @return bool
+	 */
+	private function trouver_host_si_mutualisation() {
+		// si le host a déjà été défini, ne rien tenter.
+		if (!empty($_SERVER['HTTP_HOST'])) {
+			return false;
+		}
+		// Si pas de répertoire 'sites', pas la peine de chercher...
+		$cwd = explode(DIRECTORY_SEPARATOR, getcwd());
+		if (!in_array($this->dir_sites, $cwd)) {
+			return false;
+		}
+		// On suppose que les fichiers de travail d’un site mutualisé,
+		// est un répertoire enfant du répertoire 'sites' (ie: sites/domaine.tld).
+		// On cherche un connecteur SQL dedans (ie: sites/domaine.tld/config/connect.php)
+		// On l’utilise pour se connecter à la bdd et retrouver l’adresse du site.
+		$previous = null;
+		foreach (array_reverse($cwd) as $dir) {
+			if ($dir === $this->dir_sites and $previous) {
+				$connect_file = $this->getPathFile($this->dir_sites . DIRECTORY_SEPARATOR . $previous . DIRECTORY_SEPARATOR . $this->connect);
+				if (file_exists($connect_file)) {
+					try {
+						$adresse = (new Sql($connect_file))->getAdresseSite();
+						if ($adresse) {
+							$host = parse_url($adresse, PHP_URL_HOST);
+							$_SERVER['HTTP_HOST'] = $host;
+							echo "Host défini sur $host\n";
+						}
+					} catch (\Exception $e) {
+						// a améliorer
+						echo $e->getMessage() . "\n";
+					}
+				}
+			}
+			$previous = $dir;
+		}
+		return false;
+	}
+
+	/**
 	 * Indique si on est à la racine d’un site SPIP
 	 * @return bool;
 	 */
@@ -77,6 +130,13 @@ class Spip {
 			$this->exists = is_file($this->getPathFile($this->starter));
 		}
 		return $this->exists;
+	}
+
+	/**
+	 * Place le dossier de travail au bon endroit
+	 */
+	public function chdir() {
+		chdir($this->getDirectory());
 	}
 
 	/**
@@ -205,7 +265,7 @@ class Spip {
 		}
 
 		$cwd = getcwd();
-		chdir($this->directory);
+		$this->chdir();
 		$this->preparerPourInstallation();
 		require_once $starter;
 		chdir($cwd);

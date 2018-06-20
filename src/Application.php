@@ -36,6 +36,7 @@ class Application extends ConsoleApplication {
 			'spip.webmestre.login' => '',
 			'spip.webmestre.nom' => '',
 			'spip.webmestre.login.prefixe' => 'SpipCli-',
+			'cwd' => getcwd()
 		]);
 
 		// todo: config file
@@ -70,7 +71,7 @@ class Application extends ConsoleApplication {
 			return $spip;
 		};
 		$app['spip.sql'] = function ($app) {
-			$connect = $app['spip.loader']->getPathconnect();
+			$connect = $app['spip.loader']->getPathConnect();
 			if (!is_file($connect)) {
 				throw new \Exception('SPIP database is not configured');
 			}

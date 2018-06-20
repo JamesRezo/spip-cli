@@ -1,0 +1,17 @@
+#!/usr/bin/env php
+<?php
+
+if (file_exists(__DIR__ . '/../vendor/autoload.php')) {
+	require_once __DIR__ . '/../vendor/autoload.php';
+} elseif (file_exists(__DIR__ . '/../../../autoload.php')) {
+	require_once __DIR__ . '/../../../autoload.php';
+} else {
+	throw new \Exception("Can't find autoloader. Need Composer install ?");
+}
+
+use Spip\Cli\Application;
+
+#ini_set('display_errors', 'On');
+
+$app = new Application();
+$app->run();

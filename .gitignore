@@ -1,2 +1,2 @@
-spip-cli/.git*
+src/Command/.git*
 /vendor

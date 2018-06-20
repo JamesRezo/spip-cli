@@ -1,13 +1,24 @@
 {
 	"name": "spip/spip-cli",
+	"description" : "Command Line for SPIP",
+	"keywords"    : ["spip","cli"],
 	"minimum-stability": "stable",
 	"require": {
 			"php": "^5.4|^7",
-			"symfony/console": "^2.8"
+			"symfony/console": "^2.8",
+			"symfony/finder": "^2.8",
+			"pimple/pimple" : "^3.2"
 	},
 	"config": {
 			"platform": {
 					"php": "5.4.45"
 			}
-	}
+	},
+	"autoload": {
+		"psr-4": {"Spip\\Cli\\": "src"}
+	},
+	"bin": [
+		"bin/spip",
+		"bin/spip_console_autocomplete"
+	]
 }

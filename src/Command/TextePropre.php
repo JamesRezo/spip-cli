@@ -1,21 +1,18 @@
 <?php
 
+namespace Spip\Cli\Command;
+
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class PhpEval extends Command {
+class TextePropre extends Command {
 	protected function configure() {
 		$this
-			->setName('php:eval')
-			->setDescription('Évaluer du code PHP dans un contexte SPIPien.')
-			->addArgument(
-				'code',
-				InputArgument::REQUIRED,
-				'Le code PHP à évaluer'
-			)
+			->setName('texte:propre')
+			->setDescription('Convertit du texte au format SPIP vers du HTML via la fonction "propre"')
 		;
 	}
 
@@ -26,7 +23,14 @@ class PhpEval extends Command {
 		if ($spip_loaded) {
 			chdir($spip_racine);
 
-			$return = eval($input->getArgument('code'));
+			$contenu = stream_get_contents(STDIN);
+
+			include_spip('inc/texte');
+			$output->write(trim(propre($contenu))."\n");
+
+		}
+		else{
+			$output->writeln('<error>Vous n’êtes pas dans une installation de SPIP. Impossible de convertir le texte.</error>');
 		}
 	}
 }

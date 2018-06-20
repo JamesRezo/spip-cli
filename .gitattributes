@@ -12,6 +12,7 @@ src/Command/CacheReactiver.php -text
 src/Command/CacheVider.php -text
 src/Command/CoreInstaller.php -text
 src/Command/CoreListerVersions.php -text
+src/Command/CoreMajBdd.php -text
 src/Command/CoreMettreajour.php -text
 src/Command/CorePreparer.php -text
 src/Command/CoreTelecharger.php -text
@@ -20,6 +21,7 @@ src/Command/PhpEval.php -text
 src/Command/PluginsActiver.php -text
 src/Command/PluginsDesactiver.php -text
 src/Command/PluginsLister.php -text
+src/Command/PluginsMajBdd.php -text
 src/Command/PluginsSvpDepoter.php -text
 src/Command/PluginsSvpTelecharger.php -text
 src/Command/ServerLocate.php -text

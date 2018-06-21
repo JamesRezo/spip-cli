@@ -2,6 +2,7 @@
 /README.md -text
 bin/spip -text
 bin/spip_console_autocomplete -text
+bin/spipmu -text
 /composer.json -text
 /composer.lock -text
 /spip.php -text
@@ -32,4 +33,6 @@ src/Command/TexteTypo.php -text
 src/Console/Style/SpipCliStyle.php -text
 src/Loader/Spip.php -text
 src/Loader/Sql.php -text
+src/Mutualisation/Application.php -text
+src/Mutualisation/Command/Batch.php -text
 src/Tools/Files.php -text

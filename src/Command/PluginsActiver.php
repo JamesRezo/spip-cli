@@ -107,42 +107,6 @@ class PluginsActiver extends PluginsLister
 		$command->run($input, $output);
 	}
 
-	function confirmerActivation(InputInterface $input) {
-
-		/* Et enfin, on désactive le(s) plugin(s) */
-		$dir_un = array();
-		foreach ($plugins as $prefixe) {
-			if (!in_array($prefixe, $disponibles)) {
-				$output->writeln("<error>Le plugin $prefixe est introuvable dans les plugins disponibles.</error>");
-			} else if (!in_array($prefixe, $inactifs)) {
-				$output->writeln("<comment>Le plugin $prefixe est déjà activé.</comment>");
-			} else {
-				include_spip('base/abstract_sql');
-				$p = sql_fetsel('src_archive, constante', 'spip_paquets', array('constante!=""', 'prefixe=' . sql_quote($prefixe)));
-
-				$dir = constant($p['constante']) . $p['src_archive'];
-				$output->writeln("<info>Active le plugin $prefixe (repertoire $dir)</info>");
-
-				$dirs_un[] = $p['src_archive'];
-			}
-		}
-
-		if (count($dirs_un)) {
-			include_spip('inc/plugin');
-			ecrire_plugin_actifs($dirs_un, false, 'ajoute');
-			/* actualiser la liste des paquets locaux */
-			include_spip('inc/svp_depoter_local');
-			/*sans forcer tout le recalcul en base, mais en
-			  récupérant les erreurs XML */
-			$err = array();
-			svp_actualiser_paquets_locaux(false, $err);
-			if ($err) {
-				$output->writeln("<error>Erreur XML $err</error>");
-			}
-		}
-
-	}
-
 	/**
 	 * Chercher un fichier qui contient la liste des préfixes à activer
 	 *

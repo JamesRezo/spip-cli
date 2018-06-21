@@ -39,7 +39,7 @@ class Spip {
 	 */
 	public function __construct($directory = null) {
 		if (is_null($directory)) {
-			$directory = $this->chercher_racine_spip();
+			$directory = $this->chercher_racine_spip() ?: getcwd();
 			if ($directory) {
 				$this->directory = rtrim(Files::formatPath($directory), DIRECTORY_SEPARATOR);
 				$this->trouver_host_si_mutualisation();

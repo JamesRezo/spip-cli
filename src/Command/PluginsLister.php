@@ -167,6 +167,7 @@ class PluginsLister extends Command {
 	}
 
 	public function getPluginsInactifs() {
+		include_spip('inc/plugin');
 		// chercher dans les plugins dispo
 		$get_infos = charger_fonction('get_infos','plugins');
 

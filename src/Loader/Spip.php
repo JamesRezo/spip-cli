@@ -49,6 +49,31 @@ class Spip {
 		}
 	}
 
+	/**
+	 * Calcul de chemin de travail actuel,
+	 *
+	 *
+	 * @note
+	 * La fonction getcwd() résout les liens symboliques
+	 * contrairement à un appel à `pwd`
+	 *
+	 * Par exemple si on est dans "racine_spip/sites/domaine.tld"
+	 * et que le répertoire "sites" est un lien symbolique sur
+	 * un répertoire en dehors de la racine de spip
+	 * (tel que /mnt/sites ou /home/sites), la fonction
+	 * php getcwd() résout le lien, ce qui fait
+	 * que la racine de SPIP n’est plus retrouvée.
+	 *
+	 * On préfère retourner le chemin sans sans tenir résoudre les liens symboliques
+	 *
+	 * @return string
+	 */
+	public function getcwd() {
+		if ($cwd = exec('pwd')) {
+			return $cwd;
+		}
+		return getcwd();
+	}
 
 	/**
 	 * Cherche la racine d'un site SPIP
@@ -57,12 +82,14 @@ class Spip {
 	 * lequel se trouve le répertoire courant. Retourne FALSE si l'on
 	 * est pas dans l'arborescence d'un site SPIP.
 	 *
+	 * @note Il faut faire attention à la résolution des liens symboliques !
+	 *
 	 * @return string|bool
 	 * 		Retourne le chemin vers la racine du SPIP dans lequel on se trouve.
 	 * 		Retourne false si on n'est pas dans l'arborescence d'une installation SPIP.
 	 */
 	private function chercher_racine_spip() {
-		$cwd = getcwd();
+		$cwd = $this->getcwd();
 		while ($cwd) {
 			if (file_exists(Files::formatPath($cwd . DIRECTORY_SEPARATOR . $this->starter))) {
 				return $cwd;
@@ -90,7 +117,7 @@ class Spip {
 			return false;
 		}
 		// Si pas de répertoire 'sites', pas la peine de chercher...
-		$cwd = explode(DIRECTORY_SEPARATOR, getcwd());
+		$cwd = explode(DIRECTORY_SEPARATOR, $this->getcwd());
 		if (!in_array($this->dir_sites, $cwd)) {
 			return false;
 		}
@@ -104,7 +131,7 @@ class Spip {
 				$connect_file = $this->getPathFile($this->dir_sites . DIRECTORY_SEPARATOR . $previous . DIRECTORY_SEPARATOR . $this->connect);
 				if (file_exists($connect_file)) {
 					try {
-						$adresse = (new Sql($connect_file))->getAdresseSite();
+						$adresse = (new Sql($connect_file))->getMeta('adresse_site');
 						if ($adresse) {
 							$host = parse_url($adresse, PHP_URL_HOST);
 							$_SERVER['HTTP_HOST'] = $host;
@@ -148,7 +175,7 @@ class Spip {
 		}
 
 		if (!$this->exists()) {
-			throw new \Exception('SPIP has not been found in ' . $this->directory);
+			throw new \Exception('SPIP has not been found in ' . ($this->directory ? $this->directory : $this->getcwd()));
 		}
 
 		$starter = $this->getPathFile($this->starter);

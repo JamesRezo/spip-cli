@@ -34,12 +34,16 @@ class TestSpipCommand extends Command
 		if (!$this->testPdoCharger()) {
 			return;
 		}
+		if (!$this->affchicherUrlSite()) {
+			return;
+		}
 		if (!$this->testPdoRequete()) {
 			return;
 		}
 		if (!$this->testSpipRequete()) {
 			return;
 		}
+
 	}
 
 	protected function testSpipTrouver() {
@@ -106,7 +110,9 @@ class TestSpipCommand extends Command
 			$pdo = $sql->getPdo();
 		} catch (\Exception $e) {
 			$io->fail('Echec de chargement du PDO');
-			$io->fail('DSN: ' . $sql->getPdoDsn($sql->getInfo()));
+			if ($sql) {
+				$io->fail('DSN: ' . $sql->getPdoDsn($sql->getInfo()));
+			}
 			$io->fail($e->getMessage());
 			return false;
 		}
@@ -133,6 +139,27 @@ class TestSpipCommand extends Command
 		} else {
 			$io->care('Aucun webmestre sur ce site (via PDO)');
 		}
+		return true;
+	}
+
+	public function affchicherUrlSite() {
+		$io = $this->io;
+		try {
+			/** @var Sql $sql */
+			$sql = $this->getApplication()->getService('spip.sql');
+			$adresse = $sql->getMeta('adresse_site');
+			$nom = $sql->getMeta('nom_site');
+		} catch (\Exception $e) {
+			$io->fail('Echec d’optention de l’adresse du site');
+			$io->fail($e->getMessage());
+			return false;
+		}
+		$io->text([
+			"",
+			"<info>Nom du site :</info> $nom",
+			"<info>Adresse du site :</info> $adresse",
+			""
+		]);
 		return true;
 	}
 

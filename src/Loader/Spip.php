@@ -39,14 +39,15 @@ class Spip {
 	 */
 	public function __construct($directory = null) {
 		if (is_null($directory)) {
-			$directory = $this->chercher_racine_spip() ?: getcwd();
+			$directory = $this->chercher_racine_spip();
 			if ($directory) {
-				$this->directory = rtrim(Files::formatPath($directory), DIRECTORY_SEPARATOR);
 				$this->trouver_host_si_mutualisation();
+			} else {
+				// tant pis...
+				$directory = $this->getcwd();
 			}
-		} else {
-			$this->directory = rtrim(Files::formatPath($directory), DIRECTORY_SEPARATOR);
 		}
+		$this->directory = rtrim(Files::formatPath($directory), DIRECTORY_SEPARATOR);
 	}
 
 	/**
@@ -175,7 +176,7 @@ class Spip {
 		}
 
 		if (!$this->exists()) {
-			throw new \Exception('SPIP has not been found in ' . ($this->directory ? $this->directory : $this->getcwd()));
+			throw new \Exception('SPIP has not been found in ' . $this->directory);
 		}
 
 		$starter = $this->getPathFile($this->starter);

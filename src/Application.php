@@ -6,6 +6,7 @@ use Pimple\Container;
 use Spip\Cli\Console\Style\SpipCliStyle;
 use Symfony\Component\Console\Application as ConsoleApplication;
 use Symfony\Component\Console\Input\ArgvInput;
+use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\ConsoleOutput;
@@ -207,5 +208,24 @@ class Application extends ConsoleApplication {
 	 */
 	public function getIo(InputInterface $input = null, OutputInterface $output = null) {
 		return $this->container['console.io']($input, $output);
+	}
+
+
+	/**
+	 * Affiche l’aide d’une commande donnée
+	 * @param string $commandName
+	 * @param OutputInterface|null $output
+	 */
+	public function showHelp($commandName, OutputInterface $output = null) {
+		if (null === $output) {
+			$output = new ConsoleOutput();
+		}
+		$command = $this->find('help');
+		$arguments = array(
+			'command' => 'help',
+			'command_name' => $commandName,
+		);
+		$input = new ArrayInput($arguments);
+		$command->run($input, $output);
 	}
 }

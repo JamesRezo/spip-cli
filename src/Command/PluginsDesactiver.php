@@ -2,129 +2,109 @@
 
 namespace Spip\Cli\Command;
 
-use Symfony\Component\Console\Command\Command;
+use Spip\Cli\Loader\Spip;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
-use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\Question;
-use Symfony\Component\Console\Question\ConfirmationQuestion;
 
-class PluginsDesactiver extends Command {
-    protected function configure() {
-        $this
-            ->setName('plugins:desactiver')
-            ->setDescription('Désactive des plugins.')
-            ->addArgument(
-                'plugins',
-                InputArgument::IS_ARRAY,
-                'La liste de plugins à désactiver.'
-            )
-            ->addOption(
-                'all',
-                'a',
-                InputOption::VALUE_NONE,
-                "Désactiver tous les plugins."
-            )
-        ;
-    }
+class PluginsDesactiver extends PluginsLister {
 
-    protected function execute(InputInterface $input, OutputInterface $output) {
-        global $spip_loaded;
-        global $spip_racine;
-        global $cwd;
+	protected function configure() {
+		$this->setName("plugins:desactiver")
+			->setDescription("Désactive un ou plusieurs plugins")
+			->addArgument('prefixes', InputArgument::OPTIONAL|InputArgument::IS_ARRAY, 'Liste des préfixes à désactiver')
+			->addOption('all', 'a', InputOption::VALUE_NONE, 'Désactive tous les plugins actifs')
+			->addOption('yes', 'y', InputOption::VALUE_NONE, 'Désctiver les plugins sans poser de question')
+		;
+	}
 
-        if ($spip_loaded) {
-            chdir($spip_racine);
 
-            $actifs = unserialize($GLOBALS['meta']['plugin']);
+	protected function execute(InputInterface $input, OutputInterface $output) {
+		$this->io = $this->getApplication()->getIo($input, $output);
+		$this->io->title("Désactiver des plugins");
 
-            /* Si on a choisi l'options --all, on prends tous les
-               plugins qui ne sont pas dans plugins-dist */
-            if ($input->getOption('all')) {
-                $plugins = array_map('strtolower',array_keys($actifs));
+		/** @var Spip $spip */
+		$spip = $this->getApplication()->getService('spip.loader');
+		$spip->load();
+		$spip->chdir();
+		$this->actualiserPlugins();
 
-                include_spip('base/abstract_sql');
-                $plugins = array_filter($plugins, function ($prefixe) {
-                    return sql_countsel('spip_plugins as pl'.
-                                        ' INNER JOIN spip_paquets as pa'.
-                                        ' ON pa.prefixe=pl.prefixe',
-                                        array(
-                                            'pl.prefixe='.sql_quote(strtoupper($prefixe)),
-                                            'pa.constante="_DIR_PLUGINS"',
-                                        ));
+		$prefixes = $input->getArgument('prefixes');
 
-                });
+		if ($input->getOption('all')) {
+			$prefixes = array_column($this->getPluginsActifs(['procure' => false, 'php' => false, 'dist' => false]), 'prefixe');
+		}
 
-            } else {
-                $plugins = $input->getArgument('plugins');
-            }
+		if (!$prefixes) {
+			$prefixes = $this->getPrefixesFromQuestion();
+			if (!$prefixes) {
+				$this->getApplication()->showHelp('plugins:desactiver', $output);
+				return;
+			}
+		}
 
-            if ( ! $plugins) {
+		$this->io->text("Liste des plugins à désactiver :");
+		$this->presenterListe($prefixes);
 
-                /* Si pas de plugin(s) spécifiés, on demande */
-                $helper = $this->getHelper('question');
-                $question = new Question("Quel plugin faut-il désactiver ?\n", 'help');
-                $question->setAutoCompleterValues(array_map('strtolower', array_keys($actifs)));
+		if (
+			!$input->getOption('yes')
+			and !$this->io->confirm("Les plugins listés au-dessus seront désactivés. Confirmez-vous ?", false)
+		) {
+			$this->io->care("Action annulée");
+			return;
+		}
 
-                $reponse = trim($helper->ask($input, $output, $question));
-                /* Si même après avoir demandé, l'utilisateur n'a pas
-                   donné de plugin à désactiver, on affiche l'aide. */
-                if ($reponse == 'help') {
-                    $command = $this->getApplication()->find('help');
-                    $arguments = array(
-                        'command' => 'help',
-                        'command_name' => 'plugins:desactiver',
-                    );
-                    $input = new ArrayInput($arguments);
-                    $command->run($input, $output);
-                    return;
-                }
+		$this->desactiverPlugins($prefixes);
+	}
 
-                $plugins = explode(' ', $reponse);
-            }
+	/* Si pas de plugin(s) spécifiés, on demande */
+	public function getPrefixesFromQuestion() {
+		$io = $this->io;
+		$inactifs = array_column($this->getPluginsActifs(['dist' => false]), 'prefixe');
+		$question = new Question("Quel plugin faut-il désactiver ?\n", 'help');
+		$question->setAutoCompleterValues($inactifs);
+		$reponse = trim($io->askQuestion($question));
+		if ($reponse === 'help') {
+			return false;
+		}
+		return explode(' ', $reponse);
+	}
 
-            /* On liste le(s) plugin(s) qui seront désactivés et on
-               demande confirmation. */
-            $helper = $this->getHelper('question');
-            $confirmer = new ConfirmationQuestion("Vous allez désactiver les plugins suivants : " . implode(', ', $plugins) . ".\nÊtes-vous certain-e de vouloir continuer ? ", false);
 
-            if ( ! $helper->ask($input, $output, $confirmer)) return;
+	public function desactiverPlugins($prefixes) {
+		if (!count($prefixes)) {
+			$this->io->care("Aucun prefixe à désactiver");
+			return true;
+		}
 
-            /* Et enfin, on désactive le(s) plugin(s) */
-            $dir_un = array();
-            foreach ($plugins as $prefixe) {
-                if ( ! isset($actifs[strtoupper($prefixe)])){
-                    $output->writeln("<error>Le plugin $prefixe est introuvable dans les plugins actifs.</error>");
-                } else {
-                    $plugin = $actifs[strtoupper($prefixe)];
-                    $dir = constant($plugin['dir_type']).$plugin['dir'];
-                    $output->writeln("<info>Desactive le plugin $prefixe (repertoire $dir)</info>");
-                    $dirs_un[] = $plugin['dir'];
-                }
-            }
+		$actifs = array_column($this->getPluginsActifs(), 'prefixe');
 
-            if (count($dirs_un)){
-                include_spip('inc/plugin');
-                ecrire_plugin_actifs($dirs_un,false,'enleve');
-                /* actualiser la liste des paquets locaux */
-                include_spip('inc/svp_depoter_local');
-                /*sans forcer tout le recalcul en base, mais en
-                  récupérant les erreurs XML */
-                $err = array();
-                svp_actualiser_paquets_locaux(false, $err);
-                if ($err) {
-                    $output->writeln("<error>Erreur XML $err</error>");
-                }
-            }
+		if ($deja = array_diff($prefixes, $actifs)) {
+			$prefixes = array_diff($prefixes, $deja);
+			if ($prefixes) {
+				$this->io->text("Certains préfixes demandés sont déjà inactifs :");
+				$this->presenterListe($deja);
+			} else {
+				$this->io->check("Tous les préfixes demandés sont déjà inactifs");
+				return true;
+			}
+		}
 
-            chdir($cwd);
+		$desactiver = [];
+		foreach ($this->getPluginsActifs() as $plugin) {
+			$prefixe = $plugin['prefixe'];
+			if (in_array($prefixe, $prefixes)) {
+				$desactiver[] = $plugin['dir'];
+				$prefixes = array_diff($prefixes, [$prefixe]);
+			}
+		}
 
-        } else {
-
-            $output->writeln("<comment>Vous n'êtes pas dans un installation de SPIP, il n'y a pas de plugins disponibles.</comment>");
-
-        }
-    }
+		ecrire_plugin_actifs($desactiver, false, 'enleve');
+		$actifs = $this->getPluginsActifs(['procure' => false, 'php' => false]);
+		$this->io->text("Plugins actifs après action :");
+		$this->showPlugins($actifs);
+		$this->actualiserSVP();
+	}
 }

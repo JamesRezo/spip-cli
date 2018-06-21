@@ -144,12 +144,13 @@ class PluginsLister extends Command {
 		];
 		$plugins = unserialize($GLOBALS['meta']['plugin']);
 		if ($options['spip']) {
-			return ['SPIP' => $plugins['SPIP']];
+			return ['SPIP' => array_merge(['prefixe' => 'spip'], $plugins['SPIP'])];
 		} else {
 			unset($plugins['SPIP']);
 		}
 
 		foreach ($plugins as $k => $v) {
+			$plugins[$k] = array_merge(['prefixe' => strtolower($k)], $v);
 			$is = [
 				'php' => ($k === 'PHP' or strpos($k, 'PHP:') === 0),
 				'dist' => ($v['dir_type'] === '_DIR_PLUGINS_DIST'),
@@ -160,7 +161,6 @@ class PluginsLister extends Command {
 					unset($plugins[$k]);
 				}
 			}
-
 		}
 
 		return $plugins;
@@ -181,9 +181,8 @@ class PluginsLister extends Command {
 			$plugins = liste_plugin_files($dp);
 			foreach($plugins as $dir){
 				$infos = $get_infos($dir, false, $dp);
-				$prefix = strtoupper($infos['prefix']);
 				$list[] = [
-					'nom' => $prefix,
+					'prefixe' => strtolower($infos['prefix']),
 					'etat' => $infos['etat'],
 					'version' => $infos['version'],
 					'dir' => $dir,
@@ -212,6 +211,19 @@ class PluginsLister extends Command {
 			$this->io->columns($liste, 6, true);
 		} else {
 			$this->io->listing($liste);
+		}
+	}
+
+	public function actualiserSVP() {
+		/* actualiser la liste des paquets locaux */
+		include_spip('inc/svp_depoter_local');
+		/* sans forcer tout le recalcul en base, mais en
+		  récupérant les erreurs XML */
+		$err = array();
+		svp_actualiser_paquets_locaux(false, $err);
+		if ($err) {
+			$this->io->care("Erreurs XML présentes :");
+			$this->io->care($err);
 		}
 	}
 }

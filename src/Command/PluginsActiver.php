@@ -3,14 +3,11 @@
 namespace Spip\Cli\Command;
 
 use Spip\Cli\Loader\Spip;
-use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
-use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\Question;
-use Symfony\Component\Console\Question\ConfirmationQuestion;
 
 class PluginsActiver extends PluginsLister
 {
@@ -59,7 +56,7 @@ class PluginsActiver extends PluginsLister
 		} else {
 			$plugins = $this->getPrefixesFromQuestion();
 			if (!$plugins) {
-				$this->showHelp($input, $output);
+				$this->getApplication()->showHelp('plugins:activer', $output);
 				return;
 			}
 			$this->addTodo($plugins);
@@ -87,7 +84,7 @@ class PluginsActiver extends PluginsLister
 	/* Si pas de plugin(s) spécifiés, on demande */
 	public function getPrefixesFromQuestion() {
 		$io = $this->io;
-		$inactifs = array_map('strtolower', array_column($this->getPluginsInactifs(), 'nom'));
+		$inactifs = array_column($this->getPluginsInactifs(), 'prefixe');
 		$question = new Question("Quel plugin faut-il activer ?\n", 'help');
 		$question->setAutoCompleterValues($inactifs);
 		$reponse = trim($io->askQuestion($question));
@@ -95,16 +92,6 @@ class PluginsActiver extends PluginsLister
 			return false;
 		}
 		return explode(' ', $reponse);
-	}
-
-	public function showHelp(InputInterface $input, OutputInterface $output) {
-		$command = $this->getApplication()->find('help');
-		$arguments = array(
-			'command' => 'help',
-			'command_name' => 'plugins:activer',
-		);
-		$input = new ArrayInput($arguments);
-		$command->run($input, $output);
 	}
 
 	/**
@@ -163,8 +150,7 @@ class PluginsActiver extends PluginsLister
 			$this->io->care("Aucun prefixe à activer");
 			return true;
 		}
-		$actifs = array_keys($this->getPluginsActifs());
-		$actifs = array_map('strtolower', $actifs);
+		$actifs = array_column($this->getPluginsActifs(), 'prefixe');
 
 		if ($deja = array_intersect($actifs, $prefixes)) {
 			$prefixes = array_diff($prefixes, $actifs);
@@ -180,7 +166,7 @@ class PluginsActiver extends PluginsLister
 		$inactifs = $this->getPluginsInactifs();
 		$activer = [];
 		foreach ($inactifs as $plugin) {
-			$prefixe = strtolower($plugin['nom']);
+			$prefixe = $plugin['prefixe'];
 			if (in_array($prefixe, $prefixes)) {
 				$activer[] = $plugin['dir'];
 				$prefixes = array_diff($prefixes, [$prefixe]);
@@ -201,16 +187,4 @@ class PluginsActiver extends PluginsLister
 		}
 	}
 
-	public function actualiserSVP() {
-		/* actualiser la liste des paquets locaux */
-		include_spip('inc/svp_depoter_local');
-		/* sans forcer tout le recalcul en base, mais en
-		  récupérant les erreurs XML */
-		$err = array();
-		svp_actualiser_paquets_locaux(false, $err);
-		if ($err) {
-			$this->io->care("Erreurs XML présentes :");
-			$this->io->care($err);
-		}
-	}
 }

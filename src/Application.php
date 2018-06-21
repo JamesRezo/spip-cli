@@ -46,7 +46,7 @@ class Application extends ConsoleApplication {
 
 		$this->setTimezone();
 		$this->registerServices();
-		$this->registerCommandsInProject(self::class);
+		$this->registerCommandsInProject(/*self::class*/ __CLASS__);
 		$this->loadSpip(); // hum…
 		$this->registerCommandsInSpip();
 	}

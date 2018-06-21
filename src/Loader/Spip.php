@@ -41,12 +41,17 @@ class Spip {
 		if (is_null($directory)) {
 			$directory = $this->chercher_racine_spip();
 			if ($directory) {
+				$this->setDirectory($directory);
 				$this->trouver_host_si_mutualisation();
 			} else {
-				// tant pis...
-				$directory = $this->getcwd();
+				$this->setDirectory($this->getcwd());
 			}
+		} else {
+			$this->setDirectory($directory);
 		}
+	}
+
+	public function setDirectory($directory) {
 		$this->directory = rtrim(Files::formatPath($directory), DIRECTORY_SEPARATOR);
 	}
 
@@ -70,7 +75,10 @@ class Spip {
 	 * @return string
 	 */
 	public function getcwd() {
-		if ($cwd = exec('pwd')) {
+		if (
+			strtoupper(substr(PHP_OS, 0, 3)) !== 'WIN'
+			and $cwd = exec('pwd')
+		) {
 			return $cwd;
 		}
 		return getcwd();

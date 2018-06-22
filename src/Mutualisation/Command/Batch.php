@@ -9,6 +9,8 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Process\PhpExecutableFinder;
+use Symfony\Component\Process\PhpProcess;
 
 class Batch extends Command {
 
@@ -75,12 +77,18 @@ class Batch extends Command {
 			return;
 		}
 
-		if ($command) {
-			foreach ($hosts as $site) {
-				$this->executeCommandOnSite($command, $site);
-			}
-		} else {
+		if (!$command) {
 			$io->note("Aucune commande à exécuter.");
+			return;
+		}
+
+		if (!$this->getPhpBin()) {
+			$io->fail("Executable PHP non trouvé");
+			return;
+		}
+
+		foreach ($hosts as $site) {
+			$this->executeCommandOnSite($command, $site);
 		}
 	}
 
@@ -88,11 +96,21 @@ class Batch extends Command {
 		$io = $this->io;
 		$io->section($site->host);
 		$spip_cli_path = $this->getApplication()->getService('path.spip-cli');
+		$php = $this->getPhpBin();
+		if ('\\' === DIRECTORY_SEPARATOR) {
+			$cmd = "set \"HTTP_HOST={$site->host}\" && $php $spip_cli_path $command";
+		} else {
+			$cmd= "HTTP_HOST=\"{$site->host}\" $php $spip_cli_path " . $command;
+		}
 
-		$cmd = "HTTP_HOST=\"{$site->host}\" /usr/bin/env php $spip_cli_path " . $command;
-		// echo $cmd . "\n";
+		# echo $cmd . "\n";
 		passthru($cmd);
 		$io->text(["", ""]);
+	}
+
+	protected function getPhpBin() {
+		$executableFinder = new PhpExecutableFinder();
+		return $executableFinder->find();
 	}
 
 	/**
@@ -186,24 +204,4 @@ class Batch extends Command {
 		$io->listing($affiches);
 	}
 
-
-	function _old() {
-
-		array_shift($argv); // chemin du script
-		$glob = array_shift($argv);
-		$dir = realpath('sites');
-
-		$dirs = new GlobIterator($dir . DIRECTORY_SEPARATOR . $glob, FilesystemIterator::SKIP_DOTS);
-		foreach ($dirs as $d) {
-			if (!$d->isDir()) {
-				continue;
-			}
-			$site = $d->getFilename();
-			echo "\n$site\n";
-			echo str_repeat("=", strlen($site)) . "\n";
-			$cmd = "HTTP_HOST=\"$site\" /usr/bin/env php " . __DIR__ . DIRECTORY_SEPARATOR . 'spip.php ' . implode(" ", $argv);
-			// echo $cmd . "\n";
-			passthru($cmd);
-		}
-	}
 }

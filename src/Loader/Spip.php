@@ -76,7 +76,7 @@ class Spip {
 	 */
 	public function getcwd() {
 		if (
-			strtoupper(substr(PHP_OS, 0, 3)) !== 'WIN'
+			'\\' !== DIRECTORY_SEPARATOR // Pas Windows…
 			and $cwd = exec('pwd')
 		) {
 			return $cwd;

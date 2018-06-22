@@ -21,25 +21,3 @@ $app = new Application([
 		'path.spip-cli' => __DIR__ . DIRECTORY_SEPARATOR . 'spip'
 ]);
 $app->run();
-
-/**
- * Pour l’instant se lance à la racine d’un spip mutu ayant un répertoire "sites"
- */
-/*
-
-array_shift($argv); // chemin du script
-$glob = array_shift($argv);
-$dir = realpath('sites');
-
-$dirs = new GlobIterator($dir . DIRECTORY_SEPARATOR . $glob, FilesystemIterator::SKIP_DOTS);
-foreach ($dirs as $d) {
-	if (!$d->isDir()) {
-		continue;
-	}
-	$site = $d->getFilename();
-	echo "\n$site\n";
-	echo str_repeat("=", strlen($site)) . "\n";
-	$cmd = "HTTP_HOST=\"$site\" /usr/bin/env php " . __DIR__ . DIRECTORY_SEPARATOR . 'spip.php ' . implode(" ", $argv);
-	// echo $cmd . "\n";
-	passthru($cmd);
-}*/

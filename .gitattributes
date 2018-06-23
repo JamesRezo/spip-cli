@@ -27,6 +27,9 @@ src/Command/PluginsMajBdd.php -text
 src/Command/PluginsSvpDepoter.php -text
 src/Command/PluginsSvpTelecharger.php -text
 src/Command/ServerLocate.php -text
+src/Command/SqlShowbase.php -text
+src/Command/SqlShowdiff.php -text
+src/Command/SqlShowtable.php -text
 src/Command/TestSpip.php -text
 src/Command/TestStyle.php -text
 src/Command/TextePropre.php -text

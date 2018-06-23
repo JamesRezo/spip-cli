@@ -2,18 +2,15 @@
 
 namespace Spip\Cli\Command;
 
+use Spip\Cli\Console\Command;
 use Spip\Cli\Console\Style\SpipCliStyle;
 use Spip\Cli\Loader\Spip;
-use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
 
 class PluginsLister extends Command {
-
-	/** @var SpipCliStyle */
-	protected $io;
 
 	protected function configure() {
 		$this->setName("plugins:lister")
@@ -33,13 +30,8 @@ class PluginsLister extends Command {
 	}
 
 	protected function execute(InputInterface $input, OutputInterface $output) {
-		$this->io = $this->getApplication()->getIO($input, $output);
 
-		/** @var Spip $spip */
-		$spip = $this->getApplication()->getService('loader.spip');
-		$spip->load();
-		$spip->chdir();
-
+		$this->demarrerSpip();
 		$this->io->title("Liste des plugins");
 
 		$this->actualiserPlugins();

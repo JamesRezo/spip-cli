@@ -2,9 +2,9 @@
 
 namespace Spip\Cli\Command;
 
+use Spip\Cli\Console\Command;
 use Spip\Cli\Console\Style\SpipCliStyle;
 use Spip\Cli\Loader\Spip;
-use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
@@ -21,25 +21,19 @@ class CoreMajBdd extends Command
 
 
 	protected function execute(InputInterface $input, OutputInterface $output) {
-		/** @var SpipCliStyle $io */
-		$io = $this->getApplication()->getIo($input, $output);
-		$io->title($this->getDescription());
-
-		/** @var Spip $spip */
-		$spip = $this->getApplication()->getService('loader.spip');
-		$spip->load();
-		$spip->chdir();
+		$this->io->title($this->getDescription());
+		$this->demarrerSpip();
 
 		if (empty($GLOBALS['meta']['adresse_site'])) {
-			$io->error("Metas inacessibles !");
+			$this->io->error("Metas inacessibles !");
 			return;
 		}
 
-		$this->preparer($io);
-		$this->upgrader($io);
+		$this->preparer();
+		$this->upgrader();
 	}
 
-	protected function preparer(SpipCliStyle $io) {
+	protected function preparer() {
 		include_spip("inc/autoriser");
 		include_spip("inc/plugin");
 		include_spip("base/upgrade");
@@ -48,27 +42,27 @@ class CoreMajBdd extends Command
 		define('_TIME_OUT', time() + 3600); // on a le temps on est en cli
 		lire_metas();
 
-		$io->text("Mise à jour site : " . $GLOBALS['meta']['adresse_site']);
+		$this->io->text("Mise à jour site : " . $GLOBALS['meta']['adresse_site']);
 		spip_log("Debut mise a jour site : " . $GLOBALS['meta']['adresse_site'], "maj." . _LOG_INFO_IMPORTANTE);
 	}
 
-	protected function upgrader(SpipCliStyle $io) {
+	protected function upgrader() {
 		// maj du noyau si besoin
 		if (
 			$GLOBALS['meta']['version_installee']
 			AND $GLOBALS['spip_version_base'] != $GLOBALS['meta']['version_installee']
 		) {
-			$this->upgraderCoreBase($io);
-			$this->upgraderCoreConfig($io);
-			$io->text("Fin de mise à jour");
+			$this->upgraderCoreBase();
+			$this->upgraderCoreConfig();
+			$this->io->text("Fin de mise à jour");
 		} else {
-			$io->text("Aucune mise à jour");
+			$this->io->text("Aucune mise à jour");
 		}
 	}
 
-	protected function upgraderCoreBase(SpipCliStyle $io) {
+	protected function upgraderCoreBase() {
 
-		$io->section("Mise à jour Core");
+		$this->io->section("Mise à jour Core");
 		spip_log("Mise a jour core", "maj." . _LOG_INFO_IMPORTANTE);
 
 		// quand on rentre par ici, c'est toujours une mise a jour de SPIP
@@ -77,28 +71,28 @@ class CoreMajBdd extends Command
 		$res = maj_base($GLOBALS['spip_version_base']);
 		$content = ob_get_clean();
 		if ($content) {
-			$this->presenterHTML($io, $content);
+			$this->presenterHTML($content);
 		}
 		if ($res) {
 			// on arrete tout ici !
-			$io->error("Erreur lors de la MAJ de la base du core");
-			$io->text($res);
+			$this->io->error("Erreur lors de la MAJ de la base du core");
+			$this->io->text($res);
 			exit;
 		}
 		spip_log("Fin de mise a jour SQL.", "maj." . _LOG_INFO_IMPORTANTE);
 	}
 
-	protected function upgraderCoreConfig(SpipCliStyle $io) {
-		$io->section("Mise à jour Config Core");
+	protected function upgraderCoreConfig() {
+		$this->io->section("Mise à jour Config Core");
 		spip_log("Debut m-a-j acces et config", "maj." . _LOG_INFO_IMPORTANTE);
-		$this->viderCache($io);
+		$this->viderCache();
 		$config = charger_fonction('config', 'inc');
 		$config();
 	}
 
 	// supprimer quelques fichiers temporaires qui peuvent se retrouver invalides
-	protected function viderCache(SpipCliStyle $io) {
-		$io->text("Vider caches chemins / plugins");
+	protected function viderCache() {
+		$this->io->text("Vider caches chemins / plugins");
 		@spip_unlink(_CACHE_RUBRIQUES);
 		@spip_unlink(_CACHE_PIPELINES);
 		@spip_unlink(_CACHE_PLUGINS_PATH);
@@ -109,12 +103,12 @@ class CoreMajBdd extends Command
 	}
 
 
-	protected function presenterHTML(SpipCliStyle $io, $html) {
+	protected function presenterHTML($html) {
 		$html = str_replace("&lt;", "<", $html);
 		$html = str_replace(array("<br />", "<br>", "</div></div></div>", "<!--/hd-->"), "\n", $html);
 		$html = explode("\n", $html);
 		$html = array_map('textebrut', $html);
-		$io->text($html);
+		$this->io->text($html);
 	}
 
 }

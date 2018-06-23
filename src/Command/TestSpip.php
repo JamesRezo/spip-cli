@@ -2,10 +2,10 @@
 
 namespace Spip\Cli\Command;
 
+use Spip\Cli\Console\Command;
 use Spip\Cli\Console\Style\SpipCliStyle;
 use Spip\Cli\Loader\Spip;
 use Spip\Cli\Loader\Sql;
-use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
@@ -13,16 +13,12 @@ use Symfony\Component\Console\Output\OutputInterface;
 class TestSpip extends Command
 {
 
-	/** @var SpipCliStyle */
-	protected $io;
-
 	protected function configure(){
 		$this->setName("test:spip")
 			->setDescription("Vérifie notre connexion au site SPIP.");
 	}
 
 	protected function execute(InputInterface $input, OutputInterface $output) {
-		$this->io = $this->getApplication()->getIO($input, $output);
 		$this->io->title('Vérifier notre accès à SPIP');
 
 		if (!$this->testSpipTrouver()) {
@@ -106,7 +102,7 @@ class TestSpip extends Command
 
 		try {
 			/** @var Sql $sql */
-			$sql = $this->getApplication()->getService('sql.query');
+			$sql = $this->getService('sql.query');
 			$pdo = $sql->getPdo();
 		} catch (\Exception $e) {
 			$io->fail('Echec de chargement du PDO');
@@ -124,7 +120,7 @@ class TestSpip extends Command
 		$io = $this->io;
 
 		/** @var \PDO $pdo */
-		$pdo = $this->getApplication()->getService('sql.query')->getPdo();
+		$pdo = $this->getService('sql.query')->getPdo();
 
 		$query = $pdo->prepare(
 			'SELECT id_auteur AS id, nom, email FROM spip_auteurs WHERE webmestre = :webmestre AND statut = :statut'
@@ -146,7 +142,7 @@ class TestSpip extends Command
 		$io = $this->io;
 		try {
 			/** @var Sql $sql */
-			$sql = $this->getApplication()->getService('sql.query');
+			$sql = $this->getService('sql.query');
 			$adresse = $sql->getMeta('adresse_site');
 			$nom = $sql->getMeta('nom_site');
 		} catch (\Exception $e) {

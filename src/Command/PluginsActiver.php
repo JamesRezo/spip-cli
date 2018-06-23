@@ -27,12 +27,8 @@ class PluginsActiver extends PluginsLister
 	}
 
 	protected function execute(InputInterface $input, OutputInterface $output) {
-		$this->io = $this->getApplication()->getIO($input, $output);
-
-		/** @var Spip $spip */
-		$spip = $this->getApplication()->getService('loader.spip');
-		$spip->load();
-		$spip->chdir();
+		$this->demarrerSpip();
+		$this->io->title("Activer des plugins");
 
 		if ($input->getOption('from-file')) {
 			$this->addTodo($this->getPrefixesFromFile($input->getOption('from-file')));
@@ -83,11 +79,10 @@ class PluginsActiver extends PluginsLister
 
 	/* Si pas de plugin(s) spécifiés, on demande */
 	public function getPrefixesFromQuestion() {
-		$io = $this->io;
 		$inactifs = array_column($this->getPluginsInactifs(), 'prefixe');
 		$question = new Question("Quel plugin faut-il activer ?\n", 'help');
 		$question->setAutoCompleterValues($inactifs);
-		$reponse = trim($io->askQuestion($question));
+		$reponse = trim($this->io->askQuestion($question));
 		if ($reponse === 'help') {
 			return false;
 		}

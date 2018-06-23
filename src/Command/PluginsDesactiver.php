@@ -22,13 +22,8 @@ class PluginsDesactiver extends PluginsLister {
 
 
 	protected function execute(InputInterface $input, OutputInterface $output) {
-		$this->io = $this->getApplication()->getIo($input, $output);
+		$this->demarrerSpip();
 		$this->io->title("Désactiver des plugins");
-
-		/** @var Spip $spip */
-		$spip = $this->getApplication()->getService('loader.spip');
-		$spip->load();
-		$spip->chdir();
 		$this->actualiserPlugins();
 
 		$prefixes = $input->getArgument('prefixes');
@@ -61,11 +56,10 @@ class PluginsDesactiver extends PluginsLister {
 
 	/* Si pas de plugin(s) spécifiés, on demande */
 	public function getPrefixesFromQuestion() {
-		$io = $this->io;
 		$inactifs = array_column($this->getPluginsActifs(['dist' => false]), 'prefixe');
 		$question = new Question("Quel plugin faut-il désactiver ?\n", 'help');
 		$question->setAutoCompleterValues($inactifs);
-		$reponse = trim($io->askQuestion($question));
+		$reponse = trim($this->io->askQuestion($question));
 		if ($reponse === 'help') {
 			return false;
 		}

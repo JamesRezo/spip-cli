@@ -2,8 +2,6 @@
 
 namespace Spip\Cli\Command;
 
-use Spip\Cli\Console\Style\SpipCliStyle;
-
 require_once __DIR__ . DIRECTORY_SEPARATOR . 'CoreMajBdd.php';
 
 class PluginsMajBdd extends CoreMajBdd
@@ -16,9 +14,9 @@ class PluginsMajBdd extends CoreMajBdd
 
 	// actualiser les plugins
 	// avant de se relancer pour finir les maj des plugins
-	protected function upgrader(SpipCliStyle $io) {
+	protected function upgrader() {
 		spip_log("Mettre a jour les plugins", "maj." . _LOG_INFO_IMPORTANTE);
-		$this->viderCache($io);
+		$this->viderCache();
 
 		include_spip('inc/texte');
 		include_spip('inc/filtres');
@@ -29,7 +27,7 @@ class PluginsMajBdd extends CoreMajBdd
 		plugin_installes_meta();
 		$content = ob_get_clean();
 		if ($content) {
-			$this->presenterHTML($io, $content);
+			$this->presenterHTML($content);
 		}
 
 		// et on finit en rechargeant les options de CK
@@ -39,13 +37,13 @@ class PluginsMajBdd extends CoreMajBdd
 		$erreurs = plugin_donne_erreurs(true);
 		if ($erreurs and is_array($erreurs)) {
 			$erreurs = array_map(function($e) { return "* " . $e; }, $erreurs);
-			$io->error($erreurs);
+			$this->io->error($erreurs);
 		}
 
 		if (trim($content)) {
-			$io->text("Fin mise à jour des plugins");
+			$this->io->text("Fin mise à jour des plugins");
 		} else {
-			$io->text("Aucune mise à jour de plugins");
+			$this->io->text("Aucune mise à jour de plugins");
 		}
 
 		spip_log("Fin de mise a jour plugins site", "maj." . _LOG_INFO_IMPORTANTE);

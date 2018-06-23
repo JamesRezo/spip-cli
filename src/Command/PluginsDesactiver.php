@@ -26,7 +26,7 @@ class PluginsDesactiver extends PluginsLister {
 		$this->io->title("Désactiver des plugins");
 
 		/** @var Spip $spip */
-		$spip = $this->getApplication()->getService('spip.loader');
+		$spip = $this->getApplication()->getService('loader.spip');
 		$spip->load();
 		$spip->chdir();
 		$this->actualiserPlugins();

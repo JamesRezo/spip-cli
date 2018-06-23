@@ -3,7 +3,7 @@
 namespace Spip\Cli\Loader;
 
 /**
- * Base class for Polatouche commands.
+ * Analyse de connecteur SQL SPIP et connecteur à PDO.
  * @api
  */
 class Sql {

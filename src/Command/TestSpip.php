@@ -10,7 +10,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
 
-class TestSpipCommand extends Command
+class TestSpip extends Command
 {
 
 	/** @var SpipCliStyle */
@@ -51,7 +51,7 @@ class TestSpipCommand extends Command
 
 		try {
 			/** @var Spip $spip */
-			$spip = $this->getApplication()->getService('spip.loader');
+			$spip = $this->getApplication()->getService('loader.spip');
 		} catch (\Exception $e) {
 			$io->fail('Chargement de SPIP en erreur !');
 			$io->fail($e->getMessage());
@@ -69,7 +69,7 @@ class TestSpipCommand extends Command
 		$io = $this->io;
 		try {
 			/** @var Spip $spip */
-			$spip = $this->getApplication()->getService('spip.loader');
+			$spip = $this->getApplication()->getService('loader.spip');
 			$spip->load();
 			$spip->chdir(); // grml
 		} catch (\Exception $e) {
@@ -106,7 +106,7 @@ class TestSpipCommand extends Command
 
 		try {
 			/** @var Sql $sql */
-			$sql = $this->getApplication()->getService('spip.sql');
+			$sql = $this->getApplication()->getService('sql.query');
 			$pdo = $sql->getPdo();
 		} catch (\Exception $e) {
 			$io->fail('Echec de chargement du PDO');
@@ -124,7 +124,7 @@ class TestSpipCommand extends Command
 		$io = $this->io;
 
 		/** @var \PDO $pdo */
-		$pdo = $this->getApplication()->getService('spip.sql')->getPdo();
+		$pdo = $this->getApplication()->getService('sql.query')->getPdo();
 
 		$query = $pdo->prepare(
 			'SELECT id_auteur AS id, nom, email FROM spip_auteurs WHERE webmestre = :webmestre AND statut = :statut'
@@ -146,7 +146,7 @@ class TestSpipCommand extends Command
 		$io = $this->io;
 		try {
 			/** @var Sql $sql */
-			$sql = $this->getApplication()->getService('spip.sql');
+			$sql = $this->getApplication()->getService('sql.query');
 			$adresse = $sql->getMeta('adresse_site');
 			$nom = $sql->getMeta('nom_site');
 		} catch (\Exception $e) {

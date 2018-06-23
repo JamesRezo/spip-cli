@@ -3,6 +3,7 @@
 namespace Spip\Cli\Loader;
 
 use Pimple\Container;
+use Spip\Cli\Sql\Query;
 use Spip\Cli\Tools\Files;
 
 
@@ -140,7 +141,8 @@ class Spip {
 				$connect_file = $this->getPathFile($this->dir_sites . DIRECTORY_SEPARATOR . $previous . DIRECTORY_SEPARATOR . $this->connect);
 				if (file_exists($connect_file)) {
 					try {
-						$adresse = (new Sql($connect_file))->getMeta('adresse_site');
+						$query = new Query(new Sql($connect_file));
+						$adresse = $query->getMeta('adresse_site');
 						if ($adresse) {
 							$host = parse_url($adresse, PHP_URL_HOST);
 							$_SERVER['HTTP_HOST'] = $host;

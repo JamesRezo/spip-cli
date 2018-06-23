@@ -8,7 +8,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
 
-class TestStyleCommand extends Command
+class TestStyle extends Command
 {
 
 	/** @var SpipCliStyle */

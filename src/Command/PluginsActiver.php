@@ -30,7 +30,7 @@ class PluginsActiver extends PluginsLister
 		$this->io = $this->getApplication()->getIO($input, $output);
 
 		/** @var Spip $spip */
-		$spip = $this->getApplication()->getService('spip.loader');
+		$spip = $this->getApplication()->getService('loader.spip');
 		$spip->load();
 		$spip->chdir();
 

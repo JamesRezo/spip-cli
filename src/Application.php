@@ -66,17 +66,18 @@ class Application extends ConsoleApplication {
 				return new Console\Style\SpipCliStyle($input, $output);
 			};
 		};
-		$app['spip.loader'] = function ($app) {
+		$app['loader.spip'] = function ($app) {
 			$spip = new Loader\Spip($app['spip.directory']);
 			$spip->setContainer($app);
 			return $spip;
 		};
-		$app['spip.sql'] = function ($app) {
-			$connect = $app['spip.loader']->getPathConnect();
+		$app['sql.query'] = function ($app) {
+			$connect = $app['loader.spip']->getPathConnect();
 			if (!is_file($connect)) {
 				throw new \Exception('SPIP database is not configured');
 			}
-			return new Loader\Sql($connect);
+			$sql = new Loader\Sql($connect);
+			return new Sql\Query($sql);
 		};
 	}
 
@@ -88,7 +89,7 @@ class Application extends ConsoleApplication {
 	 */
 	public function loadSpip() {
 		try {
-			$spip = $this->container['spip.loader'];
+			$spip = $this->container['loader.spip'];
 			$spip->load();
 		} catch (\Exception $e) {
 			$this->getIo()->note($e->getMessage());
@@ -139,7 +140,7 @@ class Application extends ConsoleApplication {
 		try {
 			global $spip_racine, $spip_loaded, $cwd;
 			$cwd = getcwd();
-			$spip = $this->container['spip.loader'];
+			$spip = $this->container['loader.spip'];
 			$spip_racine = $spip->getDirectory();
 			$spip_loaded = $spip->load();
 		} catch (\Exception $e) {
@@ -155,7 +156,7 @@ class Application extends ConsoleApplication {
 	 */
 	public function registerSpipCliPluginsCommands() {
 		try {
-			$spip = $this->container['spip.loader'];
+			$spip = $this->container['loader.spip'];
 			if (!$spip->load()) {
 				return false;
 			}

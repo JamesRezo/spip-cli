@@ -33,7 +33,7 @@ class AuteursSuperadmin extends Command
 		$this->io = $this->app->getIO($input, $output);
 
 		/** @var Spip $spip */
-		$spip = $this->app->getService('spip.loader');
+		$spip = $this->app->getService('loader.spip');
 		$spip->load();
 		$spip->chdir();
 

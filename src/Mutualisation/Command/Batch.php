@@ -5,6 +5,7 @@ namespace Spip\Cli\Mutualisation\Command;
 use Spip\Cli\Console\Style\SpipCliStyle;
 use Spip\Cli\Loader\Spip;
 use Spip\Cli\Loader\Sql;
+use Spip\Cli\Sql\Query;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -162,8 +163,8 @@ class Batch extends Command {
 	 */
 	protected function calculerHost(\SplFileInfo $site) {
 		$connect_file = $site->getPathname() . DIRECTORY_SEPARATOR . $this->connect;
-		$sql = new Sql($connect_file);
-		$adresse = $sql->getMeta('adresse_site');
+		$query = new Query(new Sql($connect_file));
+		$adresse = $query->getMeta('adresse_site');
 		if ($adresse) {
 			$host = parse_url($adresse, PHP_URL_HOST);
 			if (!$this->is_valid_domain_name($host)) {

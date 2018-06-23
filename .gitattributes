@@ -27,8 +27,8 @@ src/Command/PluginsMajBdd.php -text
 src/Command/PluginsSvpDepoter.php -text
 src/Command/PluginsSvpTelecharger.php -text
 src/Command/ServerLocate.php -text
-src/Command/TestSpipCommand.php -text
-src/Command/TestStyleCommand.php -text
+src/Command/TestSpip.php -text
+src/Command/TestStyle.php -text
 src/Command/TextePropre.php -text
 src/Command/TexteTypo.php -text
 src/Console/Style/SpipCliStyle.php -text
@@ -36,4 +36,5 @@ src/Loader/Spip.php -text
 src/Loader/Sql.php -text
 src/Mutualisation/Application.php -text
 src/Mutualisation/Command/Batch.php -text
+src/Sql/Query.php -text
 src/Tools/Files.php -text

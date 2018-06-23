@@ -31,6 +31,7 @@ src/Command/TestSpip.php -text
 src/Command/TestStyle.php -text
 src/Command/TextePropre.php -text
 src/Command/TexteTypo.php -text
+src/Console/Command.php -text
 src/Console/Style/SpipCliStyle.php -text
 src/Loader/Spip.php -text
 src/Loader/Sql.php -text

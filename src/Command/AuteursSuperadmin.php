@@ -3,9 +3,8 @@
 namespace Spip\Cli\Command;
 
 use Spip\Cli\Application;
-use Spip\Cli\Console\Style\SpipCliStyle;
+use Spip\Cli\Console\Command;
 use Spip\Cli\Loader\Spip;
-use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -14,8 +13,6 @@ use Symfony\Component\Console\Output\OutputInterface;
 class AuteursSuperadmin extends Command
 {
 
-	/** @var SpipCliStyle */
-	protected $io;
 	/** @var Application */
 	protected $app;
 
@@ -29,13 +26,8 @@ class AuteursSuperadmin extends Command
 	}
 
 	protected function execute(InputInterface $input, OutputInterface $output) {
-		$this->app = $this->getApplication();
-		$this->io = $this->app->getIO($input, $output);
-
 		/** @var Spip $spip */
-		$spip = $this->app->getService('loader.spip');
-		$spip->load();
-		$spip->chdir();
+		$this->demarrerSpip();
 
 		if ($input->getOption('delete')) {
 			$this->deleteWebmestre();
@@ -63,10 +55,10 @@ class AuteursSuperadmin extends Command
 			}
 		}
 
-		$email = $this->app->getService('spip.webmestre.email');
-		$login = $this->app->getService('spip.webmestre.login');
-		$nom = $this->app->getService('spip.webmestre.nom');
-		$prefix = $this->app->getService('spip.webmestre.login.prefixe');
+		$email = $this->getService('spip.webmestre.email');
+		$login = $this->getService('spip.webmestre.login');
+		$nom = $this->getService('spip.webmestre.nom');
+		$prefix = $this->getService('spip.webmestre.login.prefixe');
 		$password = bin2hex(random_bytes(16));
 		if (!$login) {
 			$login = $prefix . substr(bin2hex(random_bytes(8)), 0, 8);

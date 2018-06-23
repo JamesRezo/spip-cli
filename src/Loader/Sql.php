@@ -153,17 +153,4 @@ class Sql {
 		}
 		return $sqlite;
 	}
-
-	public function getMeta($meta) {
-		if (!is_string($meta) or !$meta) {
-			throw new \Exception("A string meta name is needed. Given : " . gettype($meta));
-		}
-		/** @var \PDO $pdo */
-		$pdo = $this->getPdo();
-		$query = $pdo->prepare('SELECT valeur FROM spip_meta WHERE nom=:nom');
-		$query->bindValue(':nom', $meta, \PDO::PARAM_STR);
-		$query->execute();
-		$meta = $query->fetchColumn();
-		return $meta;
-	}
 }

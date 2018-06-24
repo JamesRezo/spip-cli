@@ -11,7 +11,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 class SqlShowdiff extends Command
 {
 	protected function configure() {
-		$this->setName("sql:showdiff")
+		$this->setName("sql:show:diff")
 			->setDescription("Liste les tables et champs présents mais non déclarés à SPIP, ou inversement.")
 			->addOption('manquants', null, InputOption::VALUE_NONE, 'Uniquement les tables et champs déclarés mais manquants');
 	}
@@ -26,7 +26,11 @@ class SqlShowdiff extends Command
 	 *
 	 */
 	public function showdiff($ignorer_excedentaires = false) {
-		$this->io->title("Liste des tables et champs non déclarés à SPIP");
+		if ($ignorer_excedentaires) {
+			$this->io->title("Liste des tables et champs déclarés mais manquants");
+		} else {
+			$this->io->title("Liste des tables et champs non déclarés ou déclarés mais manquants");
+		}
 
 		$tables = sql_alltable();
 		$principales = lister_tables_principales();

@@ -12,7 +12,7 @@ class SqlShowtable extends Command
 {
 
 	protected function configure() {
-		$this->setName("sql:showtable")
+		$this->setName("sql:show:table")
 			->setDescription("Décrit une table dans la base de données.")
 			->addArgument('table', InputArgument::REQUIRED, 'Le nom de la table');
 	}

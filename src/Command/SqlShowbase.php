@@ -10,7 +10,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 class SqlShowbase extends Command
 {
 	protected function configure() {
-		$this->setName("sql:showbase")
+		$this->setName("sql:show:base")
 			->setDescription("Liste les tables de la BDD.");
 	}
 

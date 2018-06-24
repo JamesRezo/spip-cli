@@ -27,6 +27,8 @@ src/Command/PluginsMajBdd.php -text
 src/Command/PluginsSvpDepoter.php -text
 src/Command/PluginsSvpTelecharger.php -text
 src/Command/ServerLocate.php -text
+src/Command/SqlDumpCreate.php -text
+src/Command/SqlDumpRestore.php -text
 src/Command/SqlShowbase.php -text
 src/Command/SqlShowdiff.php -text
 src/Command/SqlShowtable.php -text
@@ -40,5 +42,6 @@ src/Loader/Spip.php -text
 src/Loader/Sql.php -text
 src/Mutualisation/Application.php -text
 src/Mutualisation/Command/Batch.php -text
+src/Sql/DumpCommonTrait.php -text
 src/Sql/Query.php -text
 src/Tools/Files.php -text

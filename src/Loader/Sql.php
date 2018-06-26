@@ -51,16 +51,26 @@ class Sql {
 		return $this->pdo;
 	}
 
-
 	/**
 	 * Retourne les informations du connect
 	 * @return array|bool
+	 * @throws \Exception
 	 */
 	public function getInfo() {
 		if (!$this->done) {
 			$this->infos = $this->infoConnect($this->connect);
 		}
 		return $this->infos;
+	}
+
+	/**
+	 * Retourne le préfixe des tables
+	 * @return string
+	 * @throws \Exception
+	 */
+	public function getPrefixTable() {
+		$infos = $this->getInfo();
+		return $infos['spip_prefix'];
 	}
 
 	public function getPdoDsn($infos) {

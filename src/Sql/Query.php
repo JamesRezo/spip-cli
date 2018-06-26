@@ -41,7 +41,8 @@ class Query {
 		}
 		/** @var \PDO $pdo */
 		$pdo = $this->getPdo();
-		$query = $pdo->prepare('SELECT valeur FROM spip_meta WHERE nom=:nom');
+		$table = $this->prefixerTable('spip_meta');
+		$query = $pdo->prepare("SELECT valeur FROM $table WHERE nom=:nom");
 		$query->bindValue(':nom', $meta, \PDO::PARAM_STR);
 		$query->execute();
 		$meta = $query->fetchColumn();
@@ -75,5 +76,18 @@ class Query {
 			}
 		}
 		return $metas;
+	}
+
+	/**
+	 * Utiliser le prefixe de table SPIP déclaré
+	 * @param string $table
+	 * @return string
+	 * @throws \Exception
+	 */
+	protected function prefixerTable($table) {
+		if ($prefixe = $this->sql->getPrefixTable()) {
+			return preg_replace('/([,\s])spip_/S', '\1' . $prefixe . '_', $table);
+		}
+		return $table;
 	}
 }

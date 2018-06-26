@@ -20,7 +20,8 @@ abstract class Command extends BaseCommand
 
 	protected function initialize(InputInterface $input, OutputInterface $output) {
 		parent::initialize($input, $output);
-		$this->io = $this->getService('console.io')($input, $output);
+		$io = $this->getService('console.io');
+		$this->io = $io($input, $output);
 	}
 
 	/**

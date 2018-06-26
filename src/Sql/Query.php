@@ -86,7 +86,7 @@ class Query {
 	 */
 	protected function prefixerTable($table) {
 		if ($prefixe = $this->sql->getPrefixTable()) {
-			return preg_replace('/([,\s])spip_/S', '\1' . $prefixe . '_', $table);
+			return preg_replace('/(^|[,\s])spip_/S', '\1' . $prefixe . '_', $table);
 		}
 		return $table;
 	}

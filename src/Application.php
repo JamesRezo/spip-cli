@@ -15,7 +15,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 class Application extends ConsoleApplication {
 
 	const NAME = "Spip Cli";
-	const VERSION = "0.4.0";
+	const VERSION = "0.4.1";
 	protected $options = [];
 	protected $container;
 
@@ -54,25 +54,27 @@ class Application extends ConsoleApplication {
 
 
 	protected function registerServices() {
-		$app = $this->container;
-		$app['console.io'] = function() {
-			return function(InputInterface $input = null, OutputInterface $output = null) {
+		$app = $this;
+		$container = $this->container;
+		$container['console.io'] = function() use ($app) {
+			return function(InputInterface $input = null, OutputInterface $output = null) use ($app) {
 				if (null === $input) {
 					$input = new ArgvInput();
 				}
 				if (null === $output) {
 					$output = new ConsoleOutput();
+					$app->configureIO($input, $output);
 				}
 				return new Console\Style\SpipCliStyle($input, $output);
 			};
 		};
-		$app['loader.spip'] = function ($app) {
-			$spip = new Loader\Spip($app['spip.directory']);
-			$spip->setContainer($app);
+		$container['loader.spip'] = function ($container) {
+			$spip = new Loader\Spip($container['spip.directory']);
+			$spip->setContainer($container);
 			return $spip;
 		};
-		$app['sql.query'] = function ($app) {
-			$connect = $app['loader.spip']->getPathConnect();
+		$container['sql.query'] = function ($container) {
+			$connect = $container['loader.spip']->getPathConnect();
 			if (!is_file($connect)) {
 				throw new \Exception('SPIP database is not configured');
 			}
@@ -92,7 +94,13 @@ class Application extends ConsoleApplication {
 			$spip = $this->container['loader.spip'];
 			$spip->load();
 		} catch (\Exception $e) {
-			$this->getIo()->note($e->getMessage());
+			$io = $this->getIo();
+			if (!in_array($io->getVerbosity(), [
+				OutputInterface::VERBOSITY_QUIET,
+				OutputInterface::VERBOSITY_NORMAL
+			])) {
+				$io->note($e->getMessage());
+			}
 		}
 	}
 

@@ -22,6 +22,8 @@ class PluginsActiver extends PluginsLister
 			->addOption('from-file', null, InputOption::VALUE_OPTIONAL, 'Chemin d’un fichier d’export')
 			->addOption('from-url', null, InputOption::VALUE_OPTIONAL, 'Url d’un site SPIP')
 			->addOption('from-list', null, InputOption::VALUE_OPTIONAL, 'Liste de préfixes à activer, séparés par virgule')
+			->addOption('import', 'e', InputOption::VALUE_NONE, 'Importer la liste des plugins actifs depuis un fichier')
+			->addOption('name', null, InputOption::VALUE_OPTIONAL, 'Nom du fichier d’import', 'plugins')
 			->addOption('all', 'a', InputOption::VALUE_NONE, "Activer tous les plugins disponibles.")
 			->addOption('yes', 'y', InputOption::VALUE_NONE, 'Activer les plugins sans poser de question');
 	}
@@ -47,6 +49,10 @@ class PluginsActiver extends PluginsLister
 					$this->addTodo([$quoi]);
 				}
 			}
+		} elseif ($input->getOption('import')) {
+			$name = $input->getOption('name') . '.txt';
+			$file = _DIR_TMP . $name;
+			$this->addTodo($this->getPrefixesFromFile($file));
 		} elseif ($input->getOption('all')) {
 			$this->addTodo(array_column($this->getPluginsInactifs(), 'nom'));
 		} else {

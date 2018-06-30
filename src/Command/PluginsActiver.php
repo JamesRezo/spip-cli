@@ -50,9 +50,7 @@ class PluginsActiver extends PluginsLister
 				}
 			}
 		} elseif ($input->getOption('import')) {
-			$name = $input->getOption('name') . '.txt';
-			$file = _DIR_TMP . $name;
-			$this->addTodo($this->getPrefixesFromFile($file));
+			$this->addTodo($this->getPrefixesFromFile($this->getExportFile($input)));
 		} elseif ($input->getOption('all')) {
 			$this->addTodo(array_column($this->getPluginsInactifs(), 'nom'));
 		} else {

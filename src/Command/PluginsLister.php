@@ -93,10 +93,15 @@ class PluginsLister extends Command {
 		$this->showPlugins($inactifs);
 	}
 
-	public function exportActifs(InputInterface $input) {
+	public function getExportFile(InputInterface $input) {
 		$name = $input->getOption('name') . '.txt';
 		$file = _DIR_TMP . $name;
-
+		return _DIR_TMP . $name;
+	}
+	
+	public function exportActifs(InputInterface $input) {
+		$file = $this->getExportFile($input);
+		
 		$actifs = $this->getPluginsActifs([
 			'procure' => false,
 			'php' => false,

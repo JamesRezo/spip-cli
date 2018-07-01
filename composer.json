@@ -7,8 +7,8 @@
         "php": "^5.4|^7",
         "symfony/console": "^2.8",
         "symfony/finder": "^2.8",
-        "pimple/pimple" : "^3.2",
-        "symfony/process": "^2.8"
+        "symfony/process": "^2.8",
+        "mnapoli/simplex": "^0.5.0"
     },
     "config": {
         "platform": {

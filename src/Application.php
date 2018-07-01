@@ -2,7 +2,8 @@
 
 namespace Spip\Cli;
 
-use Pimple\Container;
+use Psr\Container\ContainerInterface;
+use Simplex\Container;
 use Spip\Cli\Console\Style\SpipCliStyle;
 use Symfony\Component\Console\Application as ConsoleApplication;
 use Symfony\Component\Console\Input\ArgvInput;
@@ -15,8 +16,9 @@ use Symfony\Component\Console\Output\OutputInterface;
 class Application extends ConsoleApplication {
 
 	const NAME = "Spip Cli";
-	const VERSION = "0.4.1";
-	protected $options = [];
+	const VERSION = "0.5.0";
+
+	/** @var Container */
 	protected $container;
 
 	/**
@@ -30,7 +32,7 @@ class Application extends ConsoleApplication {
 	public function __construct(array $options = []) {
 		parent::__construct(self::NAME, self::VERSION);
 
-		$this->container = new Container([
+		$this->container = new Container([], $options + [
 			'debug' => false,
 			'spip.directory' => null,
 			'spip.webmestre.email' => '',
@@ -39,11 +41,6 @@ class Application extends ConsoleApplication {
 			'spip.webmestre.login.prefixe' => 'SpipCli-',
 			'cwd' => getcwd()
 		]);
-
-		// todo: config file
-		foreach ($options as $key => $value) {
-			$this->container[$key] = $value;
-		}
 
 		$this->setTimezone();
 		$this->registerServices();
@@ -56,7 +53,7 @@ class Application extends ConsoleApplication {
 	protected function registerServices() {
 		$app = $this;
 		$container = $this->container;
-		$container['console.io'] = function() use ($app) {
+		$container->set('console.io', function() use ($app) {
 			return function(InputInterface $input = null, OutputInterface $output = null) use ($app) {
 				if (null === $input) {
 					$input = new ArgvInput();
@@ -67,20 +64,20 @@ class Application extends ConsoleApplication {
 				}
 				return new Console\Style\SpipCliStyle($input, $output);
 			};
-		};
-		$container['loader.spip'] = function ($container) {
-			$spip = new Loader\Spip($container['spip.directory']);
+		});
+		$container->set('loader.spip', function (ContainerInterface $container) {
+			$spip = new Loader\Spip($container->get('spip.directory'));
 			$spip->setContainer($container);
 			return $spip;
-		};
-		$container['sql.query'] = function ($container) {
-			$connect = $container['loader.spip']->getPathConnect();
+		});
+		$container->set('sql.query', function (ContainerInterface $container) {
+			$connect = $container->get('loader.spip')->getPathConnect();
 			if (!is_file($connect)) {
 				throw new \Exception('SPIP database is not configured');
 			}
 			$sql = new Loader\Sql($connect);
 			return new Sql\Query($sql);
-		};
+		});
 	}
 
 	/**
@@ -91,7 +88,7 @@ class Application extends ConsoleApplication {
 	 */
 	public function loadSpip() {
 		try {
-			$spip = $this->container['loader.spip'];
+			$spip = $this->container->get('loader.spip');
 			$spip->load();
 		} catch (\Exception $e) {
 			$io = $this->getIo();
@@ -148,7 +145,7 @@ class Application extends ConsoleApplication {
 		try {
 			global $spip_racine, $spip_loaded, $cwd;
 			$cwd = getcwd();
-			$spip = $this->container['loader.spip'];
+			$spip = $this->container->get('loader.spip');
 			$spip_racine = $spip->getDirectory();
 			$spip_loaded = $spip->load();
 		} catch (\Exception $e) {
@@ -164,7 +161,7 @@ class Application extends ConsoleApplication {
 	 */
 	public function registerSpipCliPluginsCommands() {
 		try {
-			$spip = $this->container['loader.spip'];
+			$spip = $this->container->get('loader.spip');
 			if (!$spip->load()) {
 				return false;
 			}
@@ -207,7 +204,7 @@ class Application extends ConsoleApplication {
 	}
 
 	public function getService($name) {
-		return $this->container[$name];
+		return $this->container->get($name);
 	}
 
 	/**
@@ -216,7 +213,8 @@ class Application extends ConsoleApplication {
 	 * @return SpipCliStyle
 	 */
 	public function getIo(InputInterface $input = null, OutputInterface $output = null) {
-		return $this->container['console.io']($input, $output);
+		$io = $this->container->get('console.io');
+		return $io($input, $output);
 	}
 
 

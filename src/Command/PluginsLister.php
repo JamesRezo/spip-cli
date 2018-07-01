@@ -95,7 +95,6 @@ class PluginsLister extends Command {
 
 	public function getExportFile(InputInterface $input) {
 		$name = $input->getOption('name') . '.txt';
-		$file = _DIR_TMP . $name;
 		return _DIR_TMP . $name;
 	}
 	

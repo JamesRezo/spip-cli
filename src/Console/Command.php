@@ -2,6 +2,7 @@
 
 namespace Spip\Cli\Console;
 
+use Simplex\Container;
 use Spip\Cli\Console\Style\SpipCliStyle;
 use Spip\Cli\Loader\Spip;
 use Symfony\Component\Console\Command\Command as BaseCommand;
@@ -34,7 +35,7 @@ abstract class Command extends BaseCommand
 
 	/**
 	 * Returns the application container.
-	 * @return \Pimple\Container
+	 * @return Container
 	 */
 	public function getContainer() {
 		return $this->getApplication()->getContainer();

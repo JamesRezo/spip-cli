@@ -2,7 +2,7 @@
 
 namespace Spip\Cli\Mutualisation;
 
-use Pimple\Container;
+use Simplex\Container;
 use Symfony\Component\Console\Application as ConsoleApplication;
 use Symfony\Component\Console\Input\InputInterface;
 
@@ -24,16 +24,11 @@ class Application extends ConsoleApplication {
 	public function __construct(array $options = []) {
 		parent::__construct(self::NAME, self::VERSION);
 
-		$this->container = new Container([
+		$this->container = new Container([],$options + [
 			'debug' => false,
 			'spip.directory' => null,
 			'path.spip-cli' => '/usr/local/bin/spip',
 		]);
-
-		// todo: config file
-		foreach ($options as $key => $value) {
-			$this->container[$key] = $value;
-		}
 	}
 
 
@@ -81,7 +76,7 @@ class Application extends ConsoleApplication {
 	}
 
 	public function getService($name) {
-		return $this->container[$name];
+		return $this->container->get($name);
 	}
 
 }

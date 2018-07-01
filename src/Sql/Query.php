@@ -29,6 +29,14 @@ class Query {
 	}
 
 	/**
+	 * Retourne le loader SQL
+	 * @return Sql
+	 */
+	public function getLoaderSql() {
+		return $this->sql;
+	}
+
+	/**
 	 * Retourne la valeur d’une meta (table spip_meta de spip)
 	 *
 	 * @param string $meta

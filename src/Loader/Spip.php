@@ -2,7 +2,7 @@
 
 namespace Spip\Cli\Loader;
 
-use Pimple\Container;
+use Psr\Container\ContainerInterface;
 use Spip\Cli\Sql\Query;
 use Spip\Cli\Tools\Files;
 
@@ -31,8 +31,8 @@ class Spip {
 	/** @var bool */
 	private $exists;
 
-	/** @var Container */
-	private $app;
+	/** @var ContainerInterface */
+	private $container;
 
 	/**
 	 * Loader constructor.
@@ -294,7 +294,7 @@ class Spip {
 			$puce;
 
 		// Éviter des notices. Il faudrait utiliser HTTPFondation\Request dans SPIP.
-		if (!$this->app['debug']) {
+		if (!$this->container->get('debug')) {
 			foreach (['SERVER_NAME', 'SERVER_PORT', 'REQUEST_METHOD', 'REQUEST_URI'] as $key) {
 				if (!isset($_SERVER[$key])) {
 					$_SERVER[$key] = null;
@@ -337,12 +337,12 @@ class Spip {
 
 
 	/**
-	 * Sets a pimple instance onto this application.
+	 * Sets a container instance onto this application.
 	 *
-	 * @param Container $app
+	 * @param ContainerInterface $container
 	 * @return void
 	 */
-	public function setContainer(Container $app) {
-		$this->app = $app;
+	public function setContainer(ContainerInterface $container) {
+		$this->container = $container;
 	}
 }

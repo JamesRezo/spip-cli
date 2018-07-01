@@ -3,9 +3,9 @@
 namespace Spip\Cli\Command;
 
 use Spip\Cli\Console\Command;
-use Spip\Cli\Console\Style\SpipCliStyle;
 use Spip\Cli\Loader\Spip;
 use Spip\Cli\Loader\Sql;
+use Spip\Cli\Sql\Query;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
@@ -101,13 +101,15 @@ class TestSpip extends Command
 		$io = $this->io;
 
 		try {
-			/** @var Sql $sql */
+			/** @var Query $sql */
 			$sql = $this->getService('sql.query');
 			$pdo = $sql->getPdo();
 		} catch (\Exception $e) {
 			$io->fail('Echec de chargement du PDO');
 			if ($sql) {
-				$io->fail('DSN: ' . $sql->getPdoDsn($sql->getInfo()));
+				/** @var Sql $loader */
+				$loader = $sql->getLoaderSql();
+				$io->fail('DSN: ' . $loader->getPdoDsn($loader->getInfo()));
 			}
 			$io->fail($e->getMessage());
 			return false;
@@ -141,7 +143,7 @@ class TestSpip extends Command
 	public function affchicherUrlSite() {
 		$io = $this->io;
 		try {
-			/** @var Sql $sql */
+			/** @var Query $sql */
 			$sql = $this->getService('sql.query');
 			$adresse = $sql->getMeta('adresse_site');
 			$nom = $sql->getMeta('nom_site');

@@ -18,6 +18,9 @@ src/Command/CoreMajBdd.php -text
 src/Command/CoreMettreajour.php -text
 src/Command/CorePreparer.php -text
 src/Command/CoreTelecharger.php -text
+src/Command/FiltresExtraireBalise.php -text
+src/Command/FiltresExtraireBalises.php -text
+src/Command/FiltresTexteBrut.php -text
 src/Command/IntegraalGenerer.php -text
 src/Command/PhpEval.php -text
 src/Command/PluginsActiver.php -text

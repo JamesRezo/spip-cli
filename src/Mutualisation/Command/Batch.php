@@ -72,7 +72,7 @@ class Batch extends Command {
 		// retrouver l’url de chaque site
 		$hosts = $this->getHosts($sites);
 		if ($hosts) {
-			$this->presenterHosts($hosts);
+			$this->presenterHosts($hosts, $command);
 		} else {
 			$io->fail("Aucun site valide");
 			return;
@@ -192,12 +192,12 @@ class Batch extends Command {
 	 * Présente la liste des sites trouvés… mais pas plus de 10…
 	 * @param array $hosts
 	 */
-	protected function presenterHosts(array $hosts) {
+	protected function presenterHosts(array $hosts, $command = false) {
 		$io = $this->io;
 		$io->check(count($hosts) . " sites valides");
 		$io->text("");
 		$_hosts = $affiches = array_map(function($site) { return $site->host; }, $hosts);
-		if (count($_hosts) > 10) {
+		if ((count($_hosts) > 10) AND ($command)) {
 			$affiches = array_slice($_hosts, 0, 5);
 			$affiches[] = "[...]";
 			$affiches = array_merge($affiches, array_slice($_hosts, -5, 5));

@@ -16,7 +16,7 @@ class PluginsListerheader extends PluginsLister {
 
 	protected function configure() {
 		$this->setName("plugins:listerheader")
-			->setDescription("Export la liste des plugins du site telle stockée en base.")
+			->setDescription("Export la liste des plugins du site telle stockée en base (peut-être tronquée si trop de plugins).")
 			->addOption('name', null, InputOption::VALUE_OPTIONAL, 'Nom du fichier d’export', 'plugins')
 		;
 	}

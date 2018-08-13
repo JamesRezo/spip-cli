@@ -212,14 +212,15 @@ class PluginsLister extends Command {
 
 	public function actualiserSVP() {
 		/* actualiser la liste des paquets locaux */
-		include_spip('inc/svp_depoter_local');
-		/* sans forcer tout le recalcul en base, mais en
-		  récupérant les erreurs XML */
-		$err = array();
-		svp_actualiser_paquets_locaux(false, $err);
-		if ($err) {
-			$this->io->care("Erreurs XML présentes :");
-			$this->io->care($err);
+		if (include_spip('inc/svp_depoter_local')) {
+			/* sans forcer tout le recalcul en base, mais en
+			  récupérant les erreurs XML */
+			$err = array();
+			svp_actualiser_paquets_locaux(false, $err);
+			if ($err) {
+				$this->io->care("Erreurs XML présentes :");
+				$this->io->care($err);
+			}
 		}
 	}
 }

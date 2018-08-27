@@ -182,6 +182,7 @@ class PluginsActiver extends PluginsLister
 			$actifs = $this->getPluginsActifs(['procure' => false, 'php' => false]);
 			$this->io->text("Plugins actifs après action :");
 			$this->showPlugins($actifs);
+			$this->showPluginsErrors();
 			$this->actualiserSVP();
 		}
 	}

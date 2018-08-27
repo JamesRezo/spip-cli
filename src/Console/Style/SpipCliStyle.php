@@ -10,15 +10,41 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 class SpipCliStyle extends SymfonyStyle {
 
 	public function check($message) {
-		$this->prependText($message, ' <fg=green>✔</> ');
+		$this->prependText($message, '<fg=green>✔</> ');
 	}
 
 	public function fail($message) {
-		return $this->prependText($message, ' <fg=red>✘</> ');
+		return $this->prependText($message, '<fg=red>✘</> ');
 	}
 
 	public function care($message) {
-		return $this->prependText($message, ' <fg=yellow;options=bold>!</> ');
+		return $this->prependText($message, '<fg=yellow;options=bold>!</> ');
+	}
+
+	/**
+	 * Listing, qui permet d’indiquer une profondeur
+	 *
+	 * Pratique pour des sous listes avce check, fail ou care
+	 *
+	 *     $io->fail('Mince vous avez des erreurs');
+	 *     $io->listing(['Erreur 1', 'Erreur 2'], 2);
+	 *
+	 * @param array $elements
+	 * @param int $profondeur
+	 */
+	public function listing(array $elements, $profondeur = 1)
+	{
+		if ($profondeur == 1) {
+			parent::listing($elements);
+		} else {
+			$format = ' ' . str_repeat('  ', $profondeur - 1) . '* %s';
+			$elements = array_map(function ($element) use ($format) {
+				return sprintf($format, $element);
+			}, $elements);
+
+			$this->writeln($elements);
+			$this->newLine();
+		}
 	}
 
 	public function prependText($message, $prepend) {

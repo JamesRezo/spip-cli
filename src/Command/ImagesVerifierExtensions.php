@@ -137,11 +137,11 @@ class ImagesVerifierExtensions extends Command {
 	}
 
 	function reparer_logos(array $errors) {
-		$this->reparer($errors, 'renommer');
+		return $this->reparer($errors, 'renommer');
 	}
 
 	function reparer_documents(array $errors) {
-		$this->reparer($errors, 'reecrire');
+		return $this->reparer($errors, 'reecrire');
 	}
 
 
@@ -290,7 +290,7 @@ class ImagesVerifierExtensions extends Command {
 		if ($_files) {
 			$this->io->text("<info>Fichiers absents dans spip_documents :</info>");
 			$this->io->text("Ils peuvent peut être être supprimés du coup…");
-			$this->io->listing($_files);
+			$this->io->listing(array_map(function($file) { return "<comment>$file</comment>"; }, $_files));
 		} else {
 			$this->io->text("Tous les fichiers en erreur sont présents dans spip_documents.");
 		}

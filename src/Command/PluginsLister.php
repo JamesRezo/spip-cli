@@ -3,8 +3,6 @@
 namespace Spip\Cli\Command;
 
 use Spip\Cli\Console\Command;
-use Spip\Cli\Console\Style\SpipCliStyle;
-use Spip\Cli\Loader\Spip;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;

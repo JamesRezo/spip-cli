@@ -10,6 +10,12 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class ImagesVerifierExtensions extends Command {
 
+	protected $mimes = [
+		'jpg' => 'image/jpeg',
+		'png' => 'image/png',
+		'gif' => 'image/gif',
+	];
+
 	protected $requirements = [
 		'jpg' => 'JPEG image data',
 		'png' => 'PNG image data',
@@ -31,12 +37,14 @@ class ImagesVerifierExtensions extends Command {
 			->addOption('documents', null, InputOption::VALUE_NONE, 'Uniquement les documents')
 			->addOption('extension', null, InputOption::VALUE_OPTIONAL, 'Uniquement cette extension. Choix : jpg, png, gif')
 			->addOption('reparer', null, InputOption::VALUE_NONE, 'Tente de réparer le format')
+			->addOption('supprimer', null, InputOption::VALUE_NONE, 'Supprime les documents en erreur s’ils ne sont pas connus dans la médiathèque')
 			->addUsage("")
 			->addUsage("--logos --extension=jpg")
 			->addUsage("--documents")
 			->addUsage("--reparer")
 			->addUsage("--logos --reparer")
 			->addUsage("--documents --reparer")
+			->addUsage("--documents --reparer --supprimer")
 		;
 	}
 
@@ -63,6 +71,7 @@ class ImagesVerifierExtensions extends Command {
 		}
 
 		$reparer = $input->getOption('reparer');
+		$supprimer = $input->getOption('supprimer');
 
 		foreach ($extensions as $extension) {
 			if ($logos) {
@@ -77,7 +86,10 @@ class ImagesVerifierExtensions extends Command {
 					$errors = $this->reparer_documents($errors);
 				}
 				if ($errors) {
-					$this->verifier_fichiers_en_base(array_keys($errors));
+					$errors = $this->verifier_fichiers_en_base(array_keys($errors));
+					if ($errors and $supprimer) {
+						$this->effacer_fichiers($errors);
+					}
 				}
 			}
 		}
@@ -130,6 +142,14 @@ class ImagesVerifierExtensions extends Command {
 	}
 
 	function verifier_fichier($file, $extension) {
+		// Version rapide, si ça matche
+		// Sinon, on attrape plus d’infos avec `file`.
+		if ($info = @getimagesize($file)) {
+			$mime = image_type_to_mime_type($info[2]);
+			if ($mime === $this->mimes[$extension]) {
+				return [true, $mime];
+			}
+		}
 		$infos = `file {$file}`;
 		$ok = (false !== strpos($infos, $this->requirements[$extension]));
 		list (, $desc) = explode(':', $infos, 2);
@@ -277,23 +297,55 @@ class ImagesVerifierExtensions extends Command {
 
 	protected function verifier_fichiers_en_base($files) {
 		$base = $this->getDataDirectory();
-		$_files = array_map(function($file) use ($base) {
+		$absents = array_map(function($file) use ($base) {
 			return substr($file, strlen($base));
 		}, $files);
 
 		$presents = sql_allfetsel('id_document, fichier', 'spip_documents', sql_in('fichier', $_files));
 		if ($presents) {
-			$presents = array_column($presents, 'fichier');
-			$_files = array_diff($_files, $presents);
+			$absents = array_diff($absents, array_column($presents, 'fichier'));
 		}
 
-		if ($_files) {
+		if ($absents) {
 			$this->io->text("<info>Fichiers absents dans spip_documents :</info>");
 			$this->io->text("Ils peuvent peut être être supprimés du coup…");
-			$this->io->listing(array_map(function($file) { return "<comment>$file</comment>"; }, $_files));
+			$this->io->listing(array_map(function($file) {
+				return "<comment>$file</comment>";
+			}, $absents));
 		} else {
 			$this->io->text("Tous les fichiers en erreur sont présents dans spip_documents.");
+			$this->io->text("");
 		}
-		return $files;
+		if ($presents) {
+			$this->io->text("<info>Fichiers présents dans spip_documents :</info>");
+			$this->io->listing(array_map(function($row) {
+				return "<comment>{$row['fichier']}</comment> : n° {$row['id_document']}";
+			}, $presents));
+		}
+
+		// remettre le chemin complet
+		$absents = array_map(function($file) use ($base) {
+			return $base . $file;
+		}, $absents);
+
+		return $absents;
+	}
+
+	function effacer_fichiers($fichiers) {
+		$fichiers = array_filter($fichiers);
+		$this->io->text("Effacer " . count($fichiers) . " fichiers");
+		foreach ($fichiers as $fichier) {
+			$name = substr($fichier, strlen($this->getDataDirectory()));
+			if (strpos($fichier, $this->getDataDirectory()) === 0) {
+				unlink($fichier);
+				if (file_exists($fichier)) {
+					$this->io->fail($name);
+				} else {
+					$this->io->check($name);
+				}
+			} else {
+				$this->io->care("<comment>$name</comment> : Fichier ignoré (hors IMG)");
+			}
+		}
 	}
 }

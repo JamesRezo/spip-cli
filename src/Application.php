@@ -16,7 +16,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 class Application extends ConsoleApplication {
 
 	const NAME = "Spip Cli";
-	const VERSION = "0.5.2";
+	const VERSION = "0.5.3";
 
 	/** @var Container */
 	protected $container;
@@ -168,10 +168,13 @@ class Application extends ConsoleApplication {
 		} catch (\Exception $e) {
 			return false;
 		}
+		$cwd = getcwd();
+		$spip->chdir();
 		$commandes = find_all_in_path('spip-cli/', '.*[.]php$');
 		foreach ($commandes as $path) {
 			$this->registerSpipCliCommand($path);
 		}
+		chdir($cwd);
 	}
 
 	/**

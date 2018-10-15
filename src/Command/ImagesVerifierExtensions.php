@@ -297,13 +297,15 @@ class ImagesVerifierExtensions extends Command {
 
 	protected function verifier_fichiers_en_base($files) {
 		$base = $this->getDataDirectory();
-		$absents = array_map(function($file) use ($base) {
+		$fichiers = array_map(function($file) use ($base) {
 			return substr($file, strlen($base));
 		}, $files);
 
-		$presents = sql_allfetsel('id_document, fichier', 'spip_documents', sql_in('fichier', $_files));
+		$presents = sql_allfetsel('id_document, fichier', 'spip_documents', sql_in('fichier', $fichiers));
 		if ($presents) {
-			$absents = array_diff($absents, array_column($presents, 'fichier'));
+			$absents = array_diff($fichiers, array_column($presents, 'fichier'));
+		} else {
+			$absents = $fichiers;
 		}
 
 		if ($absents) {

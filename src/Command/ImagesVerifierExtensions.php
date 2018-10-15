@@ -133,7 +133,7 @@ class ImagesVerifierExtensions extends Command {
 		}
 		$this->io->progressFinish();
 		if ($errors) {
-			$this->io->fail(count($errors) . ' fichiers erronnés');
+			$this->io->fail(count($errors) . ' fichiers erronés');
 			$this->io->listing($errors);
 		} else {
 			$this->io->check('Tous les fichiers sont corrects');

@@ -198,7 +198,16 @@ class Application extends ConsoleApplication {
 	 */
 	protected function setTimezone() {
 		if (false == ini_get('date.timezone')) {
-			date_default_timezone_set('UTC');
+			// on se synchro sur la date system si possible
+			$date = trim(shell_exec("date -R"));
+			$date = explode(' ', $date);
+			if (preg_match(",^[+-][0-9][0-9][0-9][0-9]$,", end($date))
+			  and $zone = timezone_name_from_abbr("", 3600 * intval(end($date))/100, 0)) {
+				date_default_timezone_set($zone);
+			}
+			else {
+				date_default_timezone_set('UTC');
+			}
 		}
 	}
 

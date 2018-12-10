@@ -46,6 +46,7 @@ src/Console/Command.php -text
 src/Console/Style/SpipCliStyle.php -text
 src/Loader/Spip.php -text
 src/Loader/Sql.php -text
+src/Loader/php_compat.php -text
 src/Mutualisation/Application.php -text
 src/Mutualisation/Command/Batch.php -text
 src/Sql/DumpCommonTrait.php -text

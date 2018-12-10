@@ -305,6 +305,9 @@ class Spip {
 		$cwd = getcwd();
 		$this->chdir();
 		$this->preparerPourInstallation();
+
+		require_once __DIR__ . DIRECTORY_SEPARATOR . "php_compat.php";
+
 		require_once $starter;
 		chdir($cwd);
 	}

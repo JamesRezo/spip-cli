@@ -24,6 +24,7 @@ class PluginsActiver extends PluginsLister
 			->addOption('import', 'e', InputOption::VALUE_NONE, 'Importer la liste des plugins actifs depuis un fichier')
 			->addOption('name', null, InputOption::VALUE_OPTIONAL, 'Nom du fichier d’import', 'plugins')
 			->addOption('all', 'a', InputOption::VALUE_NONE, "Activer tous les plugins disponibles.")
+			->addOption('short', null, InputOption::VALUE_NONE, 'Affiche simplement le préfixe sur la liste des plugins actifs')
 			->addOption('yes', 'y', InputOption::VALUE_NONE, 'Activer les plugins sans poser de question');
 	}
 
@@ -98,7 +99,7 @@ class PluginsActiver extends PluginsLister
 		$this->actualiserPlugins();
 		if ($liste_complete) {
 			// et on active ce qui doit etre active
-			$this->activePlugins($liste_complete);
+			$this->activePlugins($liste_complete, $input->getOption('short'));
 		}
 		else {
 			$this->io->check('Plugins actualisés');
@@ -174,7 +175,7 @@ class PluginsActiver extends PluginsLister
 		return $this->todo;
 	}
 
-	public function activePlugins($prefixes) {
+	public function activePlugins($prefixes, $short = false) {
 		if (!is_array($prefixes)) {
 			$prefixes = array();
 		}
@@ -207,7 +208,7 @@ class PluginsActiver extends PluginsLister
 			ecrire_plugin_actifs($activer, false, 'ajoute');
 			$actifs = $this->getPluginsActifs(['procure' => false, 'php' => false]);
 			$this->io->text("Plugins actifs après action :");
-			$this->showPlugins($actifs);
+			$this->showPlugins($actifs, $short);
 			$this->showPluginsErrors();
 			$this->actualiserSVP();
 		}

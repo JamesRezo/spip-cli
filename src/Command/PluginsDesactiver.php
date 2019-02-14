@@ -38,6 +38,10 @@ class PluginsDesactiver extends PluginsLister {
 				return;
 			}
 		}
+		$prefixes = implode(' ', $prefixes);
+		$prefixes = str_replace(",", " ", $prefixes);
+		$prefixes = explode(' ', $prefixes);
+		$prefixes = array_filter($prefixes);
 
 		$liste_complete = $prefixes;
 
@@ -52,7 +56,7 @@ class PluginsDesactiver extends PluginsLister {
 			$this->io->text("Liste des plugins à desactiver :");
 			$this->presenterListe($liste_todo);
 		} else {
-			$this->io->check("Aucun préfixes demandés n'est actif");
+			$this->io->check("Tous les préfixes demandés sont déjà inactifs");
 			$this->presenterListe($liste_complete);
 		}
 
@@ -98,19 +102,6 @@ class PluginsDesactiver extends PluginsLister {
 			return true;
 		}
 
-		$actifs = array_column($this->getPluginsActifs(), 'prefixe');
-
-		if ($deja = array_diff($prefixes, $actifs)) {
-			$prefixes = array_diff($prefixes, $deja);
-			if ($prefixes) {
-				$this->io->text("Certains préfixes demandés sont déjà inactifs :");
-				$this->presenterListe($deja);
-			} else {
-				$this->io->check("Tous les préfixes demandés sont déjà inactifs");
-				return true;
-			}
-		}
-
 		$desactiver = [];
 		foreach ($this->getPluginsActifs() as $plugin) {
 			$prefixe = $plugin['prefixe'];
@@ -120,7 +111,9 @@ class PluginsDesactiver extends PluginsLister {
 			}
 		}
 
-		ecrire_plugin_actifs($desactiver, false, 'enleve');
-		$this->actualiserSVP();
+		if ($desactiver) {
+			ecrire_plugin_actifs($desactiver, false, 'enleve');
+			$this->actualiserSVP();
+		}
 	}
 }

@@ -52,7 +52,9 @@ class PluginsActiver extends PluginsLister
 			$this->addTodo($this->getPrefixesFromFile($this->getExportFile($input)));
 		} elseif ($input->getOption('all')) {
 			$this->addTodo(array_column($this->getPluginsInactifs(), 'nom'));
-		} else {
+		}
+		/* si on appelle sans plugin dans la ligne de commande c'est une simple actualisation
+		else {
 			$plugins = $this->getPrefixesFromQuestion();
 			if (!$plugins) {
 				$this->getApplication()->showHelp('plugins:activer', $output);
@@ -60,24 +62,47 @@ class PluginsActiver extends PluginsLister
 			}
 			$this->addTodo($plugins);
 		}
+		*/
 
-		if (!$liste = $this->getTodo()) {
-			$this->io->care("Aucun prefixe à activer");
-			return;
+
+		$liste_todo = $liste_complete = $this->getTodo();
+
+		// regardons ce qui est deja actif pour presenter une liste humaine et utile en affichant que ce qui sera active en plus
+		$actifs = array_column($this->getPluginsActifs(), 'prefixe');
+		if ($deja = array_intersect($actifs, $liste_complete)) {
+			$liste_todo = array_diff($liste_complete, $actifs);
+			if ($liste_todo) {
+				$this->io->text("Certains préfixes demandés sont déjà actifs :");
+				$this->presenterListe($deja);
+				$this->io->text("Liste des plugins à activer :");
+				$this->presenterListe($liste_todo);
+			} else {
+				$this->io->check("Tous les préfixes demandés sont déjà actifs");
+				$this->presenterListe($liste_complete);
+			}
 		}
-		$this->io->text("Liste des plugins à activer :");
-		$this->presenterListe($liste);
+		elseif ($liste_complete) {
+			$this->io->text("Liste des plugins à activer :");
+			$this->presenterListe($liste_complete);
+		}
 
-		if (
-			!$input->getOption('yes')
+		if ($liste_todo
+			and !$input->getOption('yes')
 			and !$this->io->confirm("Les plugins listés au-dessus seront activés. Confirmez-vous ?", false)
 		) {
 			$this->io->care("Action annulée");
 			return;
 		}
 
+		// dans tous les cas on fait au moins un actualiserPlugins()
 		$this->actualiserPlugins();
-		$this->activePlugins($liste);
+		if ($liste_complete) {
+			// et on active ce qui doit etre active
+			$this->activePlugins($liste_complete);
+		}
+		else {
+			$this->io->check('Plugins actualisés');
+		}
 	}
 
 	/* Si pas de plugin(s) spécifiés, on demande */
@@ -150,21 +175,17 @@ class PluginsActiver extends PluginsLister
 	}
 
 	public function activePlugins($prefixes) {
-		if (!count($prefixes)) {
-			$this->io->care("Aucun prefixe à activer");
-			return true;
+		if (!is_array($prefixes)) {
+			$prefixes = array();
 		}
 		$actifs = array_column($this->getPluginsActifs(), 'prefixe');
 
 		if ($deja = array_intersect($actifs, $prefixes)) {
 			$prefixes = array_diff($prefixes, $actifs);
-			if ($prefixes) {
-				$this->io->text("Certains préfixes demandés sont déjà actifs :");
-				$this->presenterListe($deja);
-			} else {
-				$this->io->check("Tous les préfixes demandés sont déjà actifs");
-				return true;
-			}
+		}
+		if (!$prefixes) {
+			$this->io->care("Aucun prefixe à activer");
+			return true;
 		}
 
 		$inactifs = $this->getPluginsInactifs();

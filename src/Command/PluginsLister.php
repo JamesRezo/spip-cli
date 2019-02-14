@@ -210,8 +210,6 @@ class PluginsLister extends Command {
 			}
 		}
 		else {
-			$nb = count($list);
-			$this->io->care("$nb plugins");
 			// affichage humain, trie et en tableau
 			ksort($list);
 			if ($short) {
@@ -221,6 +219,8 @@ class PluginsLister extends Command {
 			} else {
 				$this->io->atable($list);
 			}
+			$nb = count($list);
+			$this->io->care("$nb plugins");
 		}
 	}
 

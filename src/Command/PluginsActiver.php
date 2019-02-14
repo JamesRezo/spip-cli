@@ -112,7 +112,13 @@ class PluginsActiver extends PluginsLister
 			throw new \Exception("File doesn't exists : " . $file);
 		}
 		$list = file_get_contents($file);
-		return explode(' ', $list);
+		// soyons tolerant sur le format : on a une liste de prefixe, qui peuvent etre separes par des virgules, espaces ou retour ligne
+		// on accepte tous ces separateurs
+		$list = str_replace(array("\r", "\n", ",", "\t"), " ", $list);
+		$list = explode(' ', $list);
+		// et on enleve les valeurs vides (deux espaces, une ligne sautee...)
+		$list = array_filter($list);
+		return $list;
 	}
 
 	public function getPrefixesFromUrl($url) {

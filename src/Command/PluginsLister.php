@@ -19,6 +19,7 @@ class PluginsLister extends Command {
 			->addOption('php', null, InputOption::VALUE_NONE, 'Uniquement les extensions PHP présentes')
 			->addOption('spip', null, InputOption::VALUE_NONE, 'Uniquement SPIP')
 			->addOption('short', null, InputOption::VALUE_NONE, 'Affiche simplement le préfixe')
+			->addOption('raw', null, InputOption::VALUE_NONE, 'Affiche texte brut, sans mise en forme')
 
 			->addOption('inactifs', null, InputOption::VALUE_NONE, 'Liste les plugins inactifs.')
 
@@ -29,21 +30,25 @@ class PluginsLister extends Command {
 
 	protected function execute(InputInterface $input, OutputInterface $output) {
 
+		$raw = ($input->getOption('raw') ? true : false);
+
 		$this->demarrerSpip();
-		$this->io->title("Liste des plugins");
+		if (!$raw) {
+			$this->io->title("Liste des plugins");
+		}
 
 		$this->actualiserPlugins();
 
 		if ($input->getOption('inactifs')) {
-			$this->showInactifs($input);
+			$this->showInactifs($input, $raw);
 		} elseif ($input->getOption('export')) {
 			$this->exportActifs($input);
 		} else {
-			$this->showActifs($input);
+			$this->showActifs($input, $raw);
 		}
 	}
 
-	public function showActifs(InputInterface $input) {
+	public function showActifs(InputInterface $input, $raw = false) {
 		$options = [
 			'dist' => null,
 			'procure' => false,
@@ -76,19 +81,21 @@ class PluginsLister extends Command {
 			$list[] = 'Uniquement SPIP';
 		}
 
-		if ($list) {
+		if ($list && !$raw) {
 			$this->io->listing($list);
 		}
 
 		$actifs = $this->getPluginsActifs($options);
-		$this->showPlugins($actifs, $input->getOption('short'));
+		$this->showPlugins($actifs, $input->getOption('short'), $raw);
 	}
 
-	public function showInactifs(InputInterface $input) {
-		$list = ["Liste des plugins inactifs"];
-		$this->io->listing($list);
+	public function showInactifs(InputInterface $input, $raw = false) {
+		if (!$raw) {
+			$list = ["Liste des plugins inactifs"];
+			$this->io->listing($list);
+		}
 		$inactifs = $this->getPluginsInactifs();
-		$this->showPlugins($inactifs);
+		$this->showPlugins($inactifs, $input->getOption('short'), $raw);
 	}
 
 	public function getExportFile(InputInterface $input) {
@@ -187,15 +194,33 @@ class PluginsLister extends Command {
 		return $list;
 	}
 
-	public function showPlugins(array $list, $short = false) {
-		ksort($list);
-		if ($short) {
-			$list = array_keys($list);
-			$list = array_map('strtolower', $list);
-			$list = array_map('ucfirst', $list);
-			$this->io->columns($list, 6, true);
-		} else {
-			$this->io->atable($list);
+	public function showPlugins(array $list, $short = false, $raw = false) {
+		if ($raw) {
+			// affichage technique : dans l'ordre d'appel, en liste texte sans mise en forme
+			foreach ($list as $p=>$infos) {
+				if ($short) {
+					echo $infos['prefixe'] . "\n";
+				}
+				else {
+					echo $infos['prefixe'] . " "
+					  . $infos['version'] . " "
+					  . constant($infos['dir_type']) . $infos['dir']
+					  . "\n";
+				}
+			}
+		}
+		else {
+			$nb = count($list);
+			$this->io->care("$nb plugins");
+			// affichage humain, trie et en tableau
+			ksort($list);
+			if ($short) {
+				$list = array_keys($list);
+				$list = array_map('strtolower', $list);
+				$this->io->columns($list, 6, true);
+			} else {
+				$this->io->atable($list);
+			}
 		}
 	}
 

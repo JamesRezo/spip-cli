@@ -70,6 +70,7 @@ class PluginsActiver extends PluginsLister
 
 		// regardons ce qui est deja actif pour presenter une liste humaine et utile en affichant que ce qui sera active en plus
 		$actifs = array_column($this->getPluginsActifs(), 'prefixe');
+		$this->io->care(count($actifs) . ' plugins actifs');
 		if ($deja = array_intersect($actifs, $liste_complete)) {
 			$liste_todo = array_diff($liste_complete, $actifs);
 			if ($liste_todo) {
@@ -99,11 +100,22 @@ class PluginsActiver extends PluginsLister
 		$this->actualiserPlugins();
 		if ($liste_complete) {
 			// et on active ce qui doit etre active
-			$this->activePlugins($liste_complete, $input->getOption('short'));
+			$this->activePlugins($liste_complete);
 		}
 		else {
 			$this->io->check('Plugins actualisés');
 		}
+		$actifs2 = array_column($this->getPluginsActifs(), 'prefixe');
+		if ($actifs !== $actifs2) {
+			$actifs = $this->getPluginsActifs(['procure' => false, 'php' => false]);
+			$this->io->text("Plugins actifs après action :");
+			$this->showPlugins($actifs, $input->getOption('short'));
+		}
+		else {
+			$this->io->care("Aucune modification des plugins actifs");
+		}
+		$this->showPluginsErrors();
+
 	}
 
 	/* Si pas de plugin(s) spécifiés, on demande */
@@ -175,7 +187,7 @@ class PluginsActiver extends PluginsLister
 		return $this->todo;
 	}
 
-	public function activePlugins($prefixes, $short = false) {
+	public function activePlugins($prefixes) {
 		if (!is_array($prefixes)) {
 			$prefixes = array();
 		}
@@ -206,10 +218,6 @@ class PluginsActiver extends PluginsLister
 
 		if (count($activer)) {
 			ecrire_plugin_actifs($activer, false, 'ajoute');
-			$actifs = $this->getPluginsActifs(['procure' => false, 'php' => false]);
-			$this->io->text("Plugins actifs après action :");
-			$this->showPlugins($actifs, $short);
-			$this->showPluginsErrors();
 			$this->actualiserSVP();
 		}
 	}

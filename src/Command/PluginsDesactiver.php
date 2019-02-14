@@ -15,6 +15,7 @@ class PluginsDesactiver extends PluginsLister {
 			->setDescription("Désactive un ou plusieurs plugins")
 			->addArgument('prefixes', InputArgument::OPTIONAL|InputArgument::IS_ARRAY, 'Liste des préfixes à désactiver')
 			->addOption('all', 'a', InputOption::VALUE_NONE, 'Désactive tous les plugins actifs')
+			->addOption('short', null, InputOption::VALUE_NONE, 'Affiche simplement le préfixe sur la liste des plugins actifs')
 			->addOption('yes', 'y', InputOption::VALUE_NONE, 'Désctiver les plugins sans poser de question')
 		;
 	}
@@ -23,7 +24,6 @@ class PluginsDesactiver extends PluginsLister {
 	protected function execute(InputInterface $input, OutputInterface $output) {
 		$this->demarrerSpip();
 		$this->io->title("Désactiver des plugins");
-		$this->actualiserPlugins();
 
 		$prefixes = $input->getArgument('prefixes');
 
@@ -39,18 +39,44 @@ class PluginsDesactiver extends PluginsLister {
 			}
 		}
 
-		$this->io->text("Liste des plugins à désactiver :");
-		$this->presenterListe($prefixes);
+		$liste_complete = $prefixes;
 
-		if (
-			!$input->getOption('yes')
-			and !$this->io->confirm("Les plugins listés au-dessus seront désactivés. Confirmez-vous ?", false)
+		// regardons ce qui est deja actif pour presenter une liste humaine et utile en affichant que ce qui sera active en plus
+		$actifs = array_column($this->getPluginsActifs(), 'prefixe');
+		$this->io->care(count($actifs) . ' plugins actifs');
+		if ($liste_todo = array_intersect($actifs, $liste_complete)) {
+			if ($deja = array_diff($liste_complete, $actifs)) {
+				$this->io->text("Ne sont pas actifs :");
+				$this->presenterListe($deja);
+			}
+			$this->io->text("Liste des plugins à desactiver :");
+			$this->presenterListe($liste_todo);
+		} else {
+			$this->io->check("Aucun préfixes demandés n'est actif");
+			$this->presenterListe($liste_complete);
+		}
+
+		if ($liste_todo
+			and !$input->getOption('yes')
+			and !$this->io->confirm("Les plugins ci-dessus seront désactivés. Confirmez-vous ?", false)
 		) {
 			$this->io->care("Action annulée");
 			return;
 		}
 
-		$this->desactiverPlugins($prefixes);
+		$this->actualiserPlugins();
+		$this->desactiverPlugins($liste_complete);
+
+		$actifs2 = array_column($this->getPluginsActifs(), 'prefixe');
+		if ($actifs !== $actifs2) {
+			$actifs = $this->getPluginsActifs(['procure' => false, 'php' => false]);
+			$this->io->text("Plugins actifs après action :");
+			$this->showPlugins($actifs, $input->getOption('short'));
+		}
+		else {
+			$this->io->care("Aucune modification des plugins actifs");
+		}
+		$this->showPluginsErrors();
 	}
 
 	/* Si pas de plugin(s) spécifiés, on demande */
@@ -95,10 +121,6 @@ class PluginsDesactiver extends PluginsLister {
 		}
 
 		ecrire_plugin_actifs($desactiver, false, 'enleve');
-		$actifs = $this->getPluginsActifs(['procure' => false, 'php' => false]);
-		$this->io->text("Plugins actifs après action :");
-		$this->showPlugins($actifs);
-		$this->showPluginsErrors();
 		$this->actualiserSVP();
 	}
 }

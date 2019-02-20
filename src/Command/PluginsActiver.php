@@ -206,7 +206,7 @@ class PluginsActiver extends PluginsLister
 		foreach ($inactifs as $plugin) {
 			$prefixe = $plugin['prefixe'];
 			if (in_array($prefixe, $prefixes)) {
-				$activer[] = $plugin['dir'];
+				$activer[$prefixe] = $plugin;
 				$prefixes = array_diff($prefixes, [$prefixe]);
 			}
 		}
@@ -217,8 +217,16 @@ class PluginsActiver extends PluginsLister
 		}
 
 		if (count($activer)) {
-			ecrire_plugin_actifs($activer, false, 'ajoute');
+			$activer_dir = array_column($activer, 'dir');
+			ecrire_plugin_actifs($activer_dir, false, 'ajoute');
 			$this->actualiserSVP();
+
+			// et verifier qu'on a bien tout fait, sinon donner des infos
+			$actifs = array_column($this->getPluginsActifs(), 'prefixe');
+			$not_done = array_diff(array_column($activer, 'prefixe'), $actifs);
+			if (count($not_done)) {
+				$this->io->fail("Plugins non actives : " . implode(', ', $not_done));
+			}
 		}
 	}
 

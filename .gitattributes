@@ -34,6 +34,7 @@ src/Command/PluginsSvpTelecharger.php -text
 src/Command/ServerLocate.php -text
 src/Command/SqlDumpCreate.php -text
 src/Command/SqlDumpRestore.php -text
+src/Command/SqlOptimize.php -text
 src/Command/SqlRepair.php -text
 src/Command/SqlShowbase.php -text
 src/Command/SqlShowdiff.php -text

@@ -1,6 +1,7 @@
 * text=auto !eol
 /README.md -text
 bin/spip -text
+bin/spip.bat -text
 bin/spip_console_autocomplete -text
 bin/spipmu -text
 /composer.json -text

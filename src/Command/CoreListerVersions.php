@@ -145,7 +145,7 @@ class CoreListerVersions extends Command {
 	
 	private function svn_to_array($svn, $type) {
 		$liste = array();
-		$temp = explode("\n", $svn);
+		$temp = explode(PHP_EOL, $svn);
 		
 		foreach ($temp as $dossier) {
 			if ($cle = preg_replace('|(spip-)?(.*?)/?|i', '$2', $dossier)) {

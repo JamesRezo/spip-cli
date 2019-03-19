@@ -39,8 +39,8 @@ class SqlOptimize extends Command
 		}
 	}
 
-
-	protected function optimizeTable(string $table, bool $reorder = false) {
+	
+	protected function optimizeTable($table, $reorder = false) {
 
 		if (sql_optimize($table)) {
 			$this->io->check("$table : Optimize");

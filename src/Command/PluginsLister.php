@@ -112,7 +112,7 @@ class PluginsLister extends Command {
 		]);
 
 		$list = implode($raw ? "\n" : " ", array_map('strtolower', array_keys($actifs)));
-		if (file_put_contents($file, $list)) {
+		if (file_put_contents($file, $list . "\n")) {
 			$this->io->check("Export dans : " . $file);
 		} else {
 			$this->io->fail("Export raté : " . $file);

@@ -10,6 +10,7 @@ bin/spipmu -text
 /spip_completion.sh -text
 src/Application.php -text
 src/Command/AuteursLister.php -text
+src/Command/AuteursStatut.php -text
 src/Command/AuteursSuperadmin.php -text
 src/Command/CacheDesactiver.php -text
 src/Command/CacheReactiver.php -text

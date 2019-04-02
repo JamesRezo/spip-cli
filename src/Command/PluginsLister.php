@@ -42,7 +42,7 @@ class PluginsLister extends Command {
 		if ($input->getOption('inactifs')) {
 			$this->showInactifs($input, $raw);
 		} elseif ($input->getOption('export')) {
-			$this->exportActifs($input);
+			$this->exportActifs($input, $raw);
 		} else {
 			$this->showActifs($input, $raw);
 		}
@@ -103,7 +103,7 @@ class PluginsLister extends Command {
 		return _DIR_TMP . $name;
 	}
 	
-	public function exportActifs(InputInterface $input) {
+	public function exportActifs(InputInterface $input, $raw=false) {
 		$file = $this->getExportFile($input);
 		
 		$actifs = $this->getPluginsActifs([
@@ -111,7 +111,7 @@ class PluginsLister extends Command {
 			'php' => false,
 		]);
 
-		$list = implode(" ", array_map('strtolower', array_keys($actifs)));
+		$list = implode($raw ? "\n" : " ", array_map('strtolower', array_keys($actifs)));
 		if (file_put_contents($file, $list)) {
 			$this->io->check("Export dans : " . $file);
 		} else {

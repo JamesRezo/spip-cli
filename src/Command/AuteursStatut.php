@@ -18,7 +18,7 @@ class AuteursStatut extends Command
 	protected $app;
 
 	protected function configure() {
-		$this->setName("auteurs:statut")
+		$this->setName("auteurs:changer:statut")
 			->setDescription("Changer le statut d'un auteur")
 			->addOption('statut', null, InputOption::VALUE_REQUIRED, 'Statut à positionner')
 			->addOption('email', null, InputOption::VALUE_REQUIRED, 'Email de l\'auteur à modifier')

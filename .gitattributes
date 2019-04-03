@@ -9,6 +9,7 @@ bin/spipmu -text
 /spip.php -text
 /spip_completion.sh -text
 src/Application.php -text
+src/Command/AuteursCreer.php -text
 src/Command/AuteursLister.php -text
 src/Command/AuteursStatut.php -text
 src/Command/AuteursSuperadmin.php -text

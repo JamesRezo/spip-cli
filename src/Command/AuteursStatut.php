@@ -20,7 +20,7 @@ class AuteursStatut extends Command
 	protected function configure() {
 		$this->setName("auteurs:statut")
 			->setDescription("Changer le statut d'un auteur")
-			->addOption('statut', null, InputOption::VALUE_REQUIRED, 'Statut à posittionner')
+			->addOption('statut', null, InputOption::VALUE_REQUIRED, 'Statut à positionner')
 			->addOption('email', null, InputOption::VALUE_REQUIRED, 'Email de l\'auteur à modifier')
 			->addOption('id', null, InputOption::VALUE_REQUIRED, 'Identifiant de l\'auteur à modifier')
 			->addOption('login', null, InputOption::VALUE_REQUIRED, 'Login de l\'auteur à modifier')
@@ -55,9 +55,12 @@ class AuteursStatut extends Command
 				$login = $input->getOption('login');
 			}
 			
-			$resultat = $this->statutAuteur($statut, $email, $id, $login, $webmestre);
-			
-			$this->io->table(['id_auteur', 'login', 'nom', 'email', 'statut', 'webmestre'], $resultat);
+			if ($id OR $login OR $email) {
+				$resultat = $this->statutAuteur($statut, $email, $id, $login, $webmestre);
+				$this->io->table(['id_auteur', 'login', 'nom', 'email', 'statut', 'webmestre'], $resultat);
+			} else {
+				$this->io->text("Il faut un id ou un login ou un email pour identifier l'auteur !");
+			}
 		} else {
 			$this->io->text("Il faut un statut !");
 		}

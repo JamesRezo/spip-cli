@@ -133,7 +133,12 @@ class AuteursCreer extends Command
 		if ($nom) $action = array_merge($action, ['nom' => "'$nom'"]); 
 		if ($email) $action = array_merge($action, ['email' => "'$email'"]); 
 		if ($login) $action = array_merge($action, ['login' => "'$login'"]); 
-		if ($password) $action = array_merge($action, ['pass' =>  "'".md5($password)."'"]); // SPIP passera en sha256 + sel à la première connexion. 
+		if ($password) $action = array_merge($action, [
+			'pass' =>  "'".md5($password)."'",
+			'low_sec' => "''",
+			'alea_actuel' => "''",
+			'alea_futur' => "''",
+			]); // SPIP passera en sha256 + sel à la première connexion. 
 		if ($statut) $action = array_merge($action, ['statut' => "'$statut'"]);
 		if ($webmestre) $action = array_merge($action, ['webmestre' => ($webmestre)?"'oui'":"'non'"]);
 		

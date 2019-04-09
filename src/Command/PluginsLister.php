@@ -102,14 +102,21 @@ class PluginsLister extends Command {
 		$name = $input->getOption('name') . '.txt';
 		return _DIR_TMP . $name;
 	}
-	
+
 	public function exportActifs(InputInterface $input, $raw=false) {
 		$file = $this->getExportFile($input);
-		
-		$actifs = $this->getPluginsActifs([
+
+		$modes= [
 			'procure' => false,
 			'php' => false,
-		]);
+		];
+		if ($input->getOption('dist')) {
+			$modes['dist'] = true;
+		} elseif ($input->getOption('no-dist')) {
+			$modes['dist'] = false;
+		}
+
+		$actifs = $this->getPluginsActifs($modes);
 
 		$list = implode($raw ? "\n" : " ", array_map('strtolower', array_keys($actifs)));
 		if (file_put_contents($file, $list . "\n")) {

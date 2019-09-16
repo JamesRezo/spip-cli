@@ -122,7 +122,7 @@ class SynchroBdd extends Command
 	protected function synchroBdd($ssh, $local, $serveur, $forcer_backup) {
 		$passServeur = '-p';
 		if ($serveur->pwd) {
-			$passServeur = "--password=$serveur->pwd";
+			$passServeur = '--password="'.$serveur->pwd.'"';
 		}
 		$passLocal = '';
 		if ($local->pwd) {
@@ -160,7 +160,6 @@ class SynchroBdd extends Command
 			$this->io->text('commande ssh :');
 			$this->io->text($commande_ssh);
 		}
-
 		passthru($commande_ssh,$retour);
 		if ($retour != "0"){
 			return $this->io->error('Erreur de Synchro de bdd');

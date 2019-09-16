@@ -71,10 +71,13 @@ class SynchroInit extends Command
 					'IMG' => ''
 				),
 				'metas' => array (
-					"adresse_site"      => $GLOBALS['meta']['adresse_site'],
-					"auto_compress_js"  => "non",
-					"auto_compress_css" => "non",
-					"image_process"     => "gd2"
+					"adresse_site"         => $GLOBALS['meta']['adresse_site'],
+					"auto_compress_js"     => "non",
+					"auto_compress_css"    => "non",
+					"image_process"        => "gd2",
+					"facteur_smtp"         => "non",
+					"activer_statistiques" => "non",
+					"activer_referers"     => "non"
 				)
 			);
 

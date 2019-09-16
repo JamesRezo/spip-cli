@@ -52,30 +52,37 @@ Dans la version 0.2.3, `spip-cli` permet :
 * utiliser les fonctions propre() et typo()
 
 ## synchro SPIP
-> Synchroniser un spip distant sur un spip local, bdd / rsync / modif des metas
+> Synchroniser un spip distant sur un spip local, bdd / fichiers / modif des metas
 >
 > ATTENTION, pour l'instant ne fonctionne que sur une bdd en mysql
 
-2 actions possibles :
+3 actions possibles :
 * `spip synchro:init` creation d'un fichier json : synchroSPIP.json à la racine du SPIP, il restera un peu de configuration à faire.
-* `spip synchro:bdd` pour lancer la synchro en s'appuyant sur le fichier synchroSPIP.json
+* `spip synchro:bdd` pour lancer la synchro de la bdd et la modif des metas
+* `spip synchro:fichiers` pour lancer la synchro des fichiers via rsync
 
-Il y a 3 args facultatifs pour : `spip synchro:bdd`
+`spip synchro:bdd` : Il y a 3 args facultatifs
 * -v : verbeux
 * -b ou --backup: forcer le backup local de la bdd
-* -r ou --rsync: lancer à la fin les commandes rsync
+* -r ou --rsync: lancer à la fin les commandes rsync du script synchro:fichiers
 
-Il y a 2 façons pour ouvrir une connexion ssh :
-* via : user / hostName / port
-* via: host (il faut l'avoir défini dans .ssh/config)
+`spip synchro:fichiers`: Il y a 1 arg facultatif
+* -v : verbeux
 
-Configuration pour le rsync :
+Fichier de configuration synchroSPIP.json
+* Il y a 2 façons pour ouvrir une connexion ssh :
+	* via : user / hostName / port ex : `ssh toto@spip.net -p 1234`
+	* via: host (il faut l'avoir défini dans .ssh/config) ex: `ssh mon_host_spip`
+	* Il faut avoir une cle ssh
+* Configuration pour le rsync : Chaque ligne représente : chemin local => chemin distant:
+	* le chemin local peut-être en relatif
+	* le chemin distant doit etre en absolue et se terminer par '/'
+
+exemple :
 ```json
 "rsync": {
 	"IMG": "chemin abs vers IMG/",
 	"plugins": "chemin abs vers plugins/"
 }
 ```
-Chaque ligne représente : local => distant, le chemin distant doit etre en absolue et se terminer par '/'
-libre à chacun de mettre les dossiers voulus
 

@@ -94,30 +94,10 @@ class SynchroBdd extends Command
 			if ($this->verbeux) {
 				$this->io->section('Debut rsync');
 			}
-			$this->lancerRsync($config->rsync, $config->config_ssh);
+			SynchroFichiers::lancerRsync($config->rsync, $config->config_ssh, $this->verbeux, $this->io);
 		}
 	}
 
-	protected function lancerRsync($Trsync, $config) {
-		foreach ($Trsync as $local => $distant) {
-			if ($local and $distant) {
-				$port = $config->port ? $config->port : 22;
-				$args = $this->verbeux ? "-azv" : "-az";
-				$commande_rsync = "rsync -e 'ssh -i ~/.ssh/$config->nom_cle -p $port' $args --delete-after $config->user@$config->hostName:$distant $local";
-				if ($this->verbeux) {
-					$this->io->text('commande rsync :');
-					$this->io->text($commande_rsync);
-				}
-
-				passthru($commande_rsync,$retour);
-				if ($retour != "0"){
-					$this->io->error('Erreur Rsync');
-				} else {
-					$this->io->success('rsync');
-				}
-			}
-		}
-	}
 
 	protected function synchroBdd($ssh, $local, $serveur, $forcer_backup) {
 		$passServeur = '-p';

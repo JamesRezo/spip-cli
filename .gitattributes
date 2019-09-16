@@ -44,6 +44,7 @@ src/Command/SqlShowbase.php -text
 src/Command/SqlShowdiff.php -text
 src/Command/SqlShowtable.php -text
 src/Command/SynchroBdd.php -text
+src/Command/SynchroFichiers.php -text
 src/Command/SynchroInit.php -text
 src/Command/TestSpip.php -text
 src/Command/TestStyle.php -text

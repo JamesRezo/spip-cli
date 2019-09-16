@@ -126,7 +126,7 @@ class SynchroBdd extends Command
 		}
 		$passLocal = '';
 		if ($local->pwd) {
-			$passLocal = "--password=$local->pwd";
+			$passLocal = '--password="'.$local->pwd.'"';
 		}
 
 		/*

@@ -103,7 +103,7 @@ class SynchroBdd extends Command
 			if ($local and $distant) {
 				$port = $config->port ? $config->port : 22;
 				$args = $this->verbeux ? "-azv" : "-az";
-				$commande_rsync = "rsync -e 'ssh -i ~/.ssh/id_rsa -p $port' $args --delete-after $config->user@$config->hostName:$distant $local";
+				$commande_rsync = "rsync -e 'ssh -i ~/.ssh/$config->nom_cle -p $port' $args --delete-after $config->user@$config->hostName:$distant $local";
 				if ($this->verbeux) {
 					$this->io->text('commande rsync :');
 					$this->io->text($commande_rsync);

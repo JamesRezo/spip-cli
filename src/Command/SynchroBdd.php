@@ -152,7 +152,7 @@ class SynchroBdd extends Command
 		} else {
 			$SSH = "$ssh->user@$ssh->hostName";
 			if ($ssh->port) {
-				$SSH .= " -p $ssh->port";
+				$SSH .= " -i ~/.ssh/$ssh->nom_cle -p $ssh->port";
 			}
 		}
 		$commande_ssh ="ssh $SSH 'mysqldump -u $serveur->user $passServeur --opt $serveur->bdd' |mysql -u $local->user $passLocal $local->bdd";

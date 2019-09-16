@@ -54,7 +54,7 @@ class SynchroInit extends Command
 					'user'     => '',
 					'port'     => '',
 					'nom_cle'  => 'id_rsa',
-					'hostname' => ''
+					'hostName' => ''
 				),
 				'config_mysql_local' => array (
 					'user'   => $connect['1'],

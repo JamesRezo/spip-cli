@@ -77,6 +77,7 @@ Fichier de configuration synchroSPIP.json
 * Configuration pour le rsync : Chaque ligne représente : chemin local => chemin distant:
 	* le chemin local peut-être en relatif
 	* le chemin distant doit etre en absolue et se terminer par '/'
+* Configuration pwd mysql distant: si dans le fichier de configuration, on indique pas le pwd mysql, il sera demandé en console
 
 exemple :
 ```json

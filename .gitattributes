@@ -43,6 +43,8 @@ src/Command/SqlRepair.php -text
 src/Command/SqlShowbase.php -text
 src/Command/SqlShowdiff.php -text
 src/Command/SqlShowtable.php -text
+src/Command/SynchroBdd.php -text
+src/Command/SynchroInit.php -text
 src/Command/TestSpip.php -text
 src/Command/TestStyle.php -text
 src/Command/TextePropre.php -text

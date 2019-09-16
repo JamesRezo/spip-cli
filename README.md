@@ -50,3 +50,21 @@ Dans la version 0.2.3, `spip-cli` permet :
 * d'installer la base de données de SPIP et le premier utilisateur,
 * vider et activer/désactiver le cache.
 * utiliser les fonctions propre() et typo()
+
+## synchro SPIP
+> Synchroniser un spip distant sur un spip local, bdd / rsync / modif des metas
+>
+> ATTENTION, pour l'instant ne fonctionne que sur une bdd en mysql
+
+2 actions possibles :
+* `spip synchro:init` creation d'un fichier json : synchroSPIP.json à la racine du SPIP, il restera un peu de configuration à faire.
+* `spip synchro:bdd` pour lancer la synchro en s'appuyant sur le fichier synchroSPIP.json
+
+Il y a 3 args facultatifs pour : `spip synchro:bdd`
+* -v : verbeux
+* -b ou --backup: forcer le backup local de la bdd
+* -r ou --rsync: lancer à la fin les commandes rsync
+
+Il y a 2 façons pour ouvrir une connexion ssh :
+* via : user / hostname / port
+* via: host (il faut l'avoir défini dans .ssh/config)

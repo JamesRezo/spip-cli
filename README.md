@@ -66,5 +66,16 @@ Il y a 3 args facultatifs pour : `spip synchro:bdd`
 * -r ou --rsync: lancer à la fin les commandes rsync
 
 Il y a 2 façons pour ouvrir une connexion ssh :
-* via : user / hostname / port
+* via : user / hostName / port
 * via: host (il faut l'avoir défini dans .ssh/config)
+
+Configuration pour le rsync :
+```json
+"rsync": {
+	"IMG": "chemin abs vers IMG/",
+	"plugins": "chemin abs vers plugins/"
+}
+```
+Chaque ligne représente : local => distant, le chemin distant doit etre en absolue et se terminer par '/'
+libre à chacun de mettre les dossiers voulus
+

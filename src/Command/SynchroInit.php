@@ -50,11 +50,11 @@ class SynchroInit extends Command
 		if (!file_exists('synchroSPIP.json')) {
 			$json = array(
 				'config_ssh' => array (
-					'host'     => '',
-					'user'     => '',
-					'port'     => '',
-					'nom_cle'  => 'id_rsa',
-					'hostName' => ''
+					'host'       => '',
+					'user'       => '',
+					'port'       => '',
+					'chemin_cle' => '',
+					'hostName'   => ''
 				),
 				'config_mysql_local' => array (
 					'user'   => $connect['1'],

@@ -77,8 +77,21 @@ class SynchroFichiers extends Command
 			if ($local and $distant) {
 				$io->text('');
 				$port = $config->port ? $config->port : 22;
+				if ($config->host) {
+					$SSH = $config->host;
+				} else {
+					$SSH = "$config->user@$config->hostName";
+				}
+				$cle_ssh= '';
+				$port = '';
+				if ($config->chemin_cle) {
+					if ($config->port) {
+						$port = "-p $config->port";
+					}
+					$cle_ssh = "-i $config->chemin_cle $port";
+				}
 				$args = $verbeux ? "-azv" : "-az";
-				$commande_rsync = "rsync -e 'ssh -i ~/.ssh/$config->nom_cle -p $port' $args --delete-after $config->user@$config->hostName:$distant $local";
+				$commande_rsync = "rsync -e 'ssh $cle_ssh' $args --delete-after $SSH:$distant $local";
 				if ($verbeux) {
 					$io->text('commande rsync :');
 					$io->text($commande_rsync);

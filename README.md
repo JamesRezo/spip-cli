@@ -71,8 +71,8 @@ Dans la version 0.2.3, `spip-cli` permet :
 
 Fichier de configuration synchroSPIP.json
 * Il y a 2 façons pour ouvrir une connexion ssh :
-	* via : user / hostName / port ex : `ssh toto@spip.net -p 1234`
-	* via: host (il faut l'avoir défini dans .ssh/config) ex: `ssh mon_host_spip`
+	* via : user / hostName / port ex : `ssh toto@spip.net -p 1234`, si chemin_cle est defini, on pourra choisir une cle ssh dans un dossier autre que .ssh
+	* via: host (il faut l'avoir défini dans .ssh/config) ex: `ssh mon_host_spip` dans ce cas, pas besoin de renseigner les autres champs dans config_ssh
 	* Il faut avoir une cle ssh
 * Configuration pour le rsync : Chaque ligne représente : chemin local => chemin distant:
 	* le chemin local peut-être en relatif

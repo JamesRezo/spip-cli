@@ -202,8 +202,15 @@ class Application extends ConsoleApplication {
 			$date = trim(shell_exec("date -R"));
 			$date = explode(' ', $date);
 			if (preg_match(",^[+-][0-9][0-9][0-9][0-9]$,", end($date))
-			  and $zone = timezone_name_from_abbr("", 3600 * intval(end($date))/100, 0)) {
+			  and $offset_target = intval(end($date))/100
+			  and $zone = timezone_name_from_abbr("", 3600 * $offset_target, 0)) {
 				date_default_timezone_set($zone);
+				// se recaler en cas de daylight saving time
+				$offset_real = intval(date_offset_get(new \DateTime) / 3600);
+				if ($offset_real > $offset_target) {
+					$zone = timezone_name_from_abbr("", 3600 * $offset_target, 1);
+					date_default_timezone_set($zone);
+				}
 			}
 			else {
 				date_default_timezone_set('UTC');

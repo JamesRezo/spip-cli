@@ -23,6 +23,7 @@ class SqlRepair extends Command
 	}
 
 	protected function presenterHTML($html) {
+		include_spip('inc/filtres');
 		$html = explode("</div><div>", $html);
 		foreach ($html as $ligne) {
 			$table = explode("\n", $ligne, 2);

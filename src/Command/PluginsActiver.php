@@ -209,6 +209,10 @@ class PluginsActiver extends PluginsLister
 				$activer[$prefixe] = $plugin;
 				$prefixes = array_diff($prefixes, [$prefixe]);
 			}
+			elseif(strpos($plugin['dir'], '/') and in_array($plugin['dir'], $prefixes)) {
+				$activer[$prefixe] = $plugin;
+				$prefixes = array_diff($prefixes, [$plugin['dir']]);
+			}
 		}
 
 		if (count($prefixes)) {

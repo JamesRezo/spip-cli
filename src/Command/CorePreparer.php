@@ -27,6 +27,12 @@ class CorePreparer extends Command {
 				'Configuration du RewriteBase pour la réécriture des URLs',
 				''
 			)
+			->addOption(
+				'auto',
+				null,
+				InputOption::VALUE_NONE,
+				'Activer le dossier auto/ pour permettre aux admins de télécharger des plugins avec SVP'
+			)
 		;
 	}
 
@@ -42,8 +48,16 @@ class CorePreparer extends Command {
 			// On revient à la racine
 			chdir($spip_racine);
 			
+			// Dossier à gérer
+			$dossiers = array('config', 'IMG', 'lib', 'local', 'plugins', 'tmp');
+			
+			// auto/
+			if ($input->hasParameterOption(array('--auto'))) {
+				$dossiers[] = _DIR_PLUGINS . '/auto';
+			}
+			
 			// Vérification des dossiers et leurs droits
-			foreach (array('config', 'IMG', 'lib', 'local', 'plugins', 'tmp') as $dossier) {
+			foreach ($dossiers as $dossier) {
 				$sortie = '';
 			
 				// Si le dossier n'existe pas on l'ajoute

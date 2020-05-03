@@ -36,7 +36,7 @@ class IntegraalGenerer extends Command {
 				'c',
 				InputOption::VALUE_REQUIRED,
 				'Chemin local ou URL distante où trouver Intégraal',
-				'svn://zone.spip.org/spip-zone/_squelettes_/integraal'
+				'https://git.spip.net/spip-contrib-squelettes/integraal.git'
 			)
 			->addOption(
 				'auteur',
@@ -65,7 +65,7 @@ class IntegraalGenerer extends Command {
 		$nom = $input->getArgument('nom');
 
 		// On récupère les options
-		$chemin_integraal = rtrim($input->getOption('chemin_integraal'), DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR;
+		$chemin_integraal = rtrim($input->getOption('chemin_integraal'), DIRECTORY_SEPARATOR);
 		$auteur = $input->getOption('auteur');
 		$url = $input->getOption('url');
 		$version_theme = $input->getOption('theme');
@@ -136,44 +136,26 @@ class IntegraalGenerer extends Command {
 
 				// On se déplace dans le dossier du nouveau projet
 				chdir($prefixe);
+				
+				// On télécharge tout depuis le git dans le dossier courant
+				passthru("git clone $chemin_integraal .", $erreur);
 
-				// Retrouver le chemin correspondant à la version du thème choisie
-				$chemins_theme = array(
-					'gulp'    => 'theme/trunk',
-					'scssphp' => 'theme/branches/scssphp',
-				);
-				$chemin_theme = $chemins_theme[$version_theme];
-
-				// On lance la commande SVN pour télécharger les 3 plugins
-				// dans le répertoire courant
-				$erreur_telecharger = false;
-				$sous_chemins_integraal = array(
-					'squelettes',
-					$chemin_theme,
-					'core'
-				);
-				foreach($sous_chemins_integraal as $dossier){
-					$chemin_sous_dossier = $chemin_integraal . $dossier;
-					passthru("svn export {$chemin_sous_dossier}", $erreur);
-					if ($erreur !== 0) {
-						$erreur_telecharger = true;
-						break;
-					}
-				}
-
-				if ($erreur_telecharger) {
+				if ($erreur !== 0) {
 					$output->writeln("<error>Une erreur s’est produite durant le téléchargement.</error>");
 				} else {
-
 					// Mettre les bonnes permissions
-					passthru("chmod 775 -R *");
-
-					// On renomme le dossier du theme
-					$dossier_theme = ltrim(strrchr($chemin_theme, DIRECTORY_SEPARATOR), DIRECTORY_SEPARATOR);
-					passthru("mv $dossier_theme theme", $erreur);
+					passthru('chmod 775 -R *');
+					
+					// On supprime le git
+					passthru('rm -rf .git');
+					
+					// On déplace le dossier du thème
+					passthru("mv themes/$version_theme theme", $erreur);
 					if ($erreur){
-						$output->writeln("<error>Le dossier du theme (${dossier_theme}) n’a pas pu être renommé en « theme »</error>");
+						$output->writeln("<error>Le dossier du theme (themes/${version_theme}) n’a pas pu être renommé en « theme »</error>");
 					}
+					// Et on supprime le reste
+					passthru("rm -rf themes", $erreur);
 
 					// On renomme tous les fichiers avec "integraal"
 					passthru("find . | rename -v 's/integraal/{$prefixe}/g'", $erreur);

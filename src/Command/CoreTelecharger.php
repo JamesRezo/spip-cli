@@ -666,6 +666,16 @@ class CoreTelecharger extends Command {
 		if (is_dir($this->dest) and $rempli = (count(scandir($this->dest)) > 2)) {
 			$infos = $this->git_info('assoc');
 			
+			// patch pour les installs obsolètes faites avec un checkout.php qui indiquait des URLs de repo de la forme git.spip.net/SPIP
+			if (isset($infos['source']) AND strstr($infos['source'], 'git.spip.net/SPIP') AND strtolower($infos['source']) == $this->source) {
+				$output->writeln(array("<comment>URL de repo SPIP obsolète (".$infos['source']."): passage sur ".strtolower($infos['source'])."</comment>"));
+				$infos['source'] = strtolower($infos['source']);
+				$cmd_maj = 'git remote set-url origin '.$infos['source'];
+				chdir($this->dest);
+				passthru($cmd_maj);
+				chdir($curdir);
+			}
+
 			if (!$infos) {
 				$output->writeln(array("<error>{$this->dest} n’est ni un dépôt Git ni un répertoire vide.</error>"));
 			}

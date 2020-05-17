@@ -107,6 +107,10 @@ class CoreTelecharger extends Command {
 			if ($methode = $input->getArgument('methode') and in_array($methode, array('spip', 'git', 'svn', 'ftp'))) {
 				$this->methode = $methode;
 			}
+			else {
+				$output->writeln("<error>La méthode de téléchargement $methode n’est pas reconnue : spip | git | svn | ftp</error>");
+				exit;
+			}
 			
 			//La source
 			$this->source = $input->getArgument('source');

@@ -32,6 +32,16 @@ class CoreTelecharger extends Command {
 		$this
 			->setName('core:telecharger')
 			->setDescription('Télécharger SPIP dans un dossier (par défaut, la dernière version stable)')
+			->setHelp('Quelques exemples :
+
+<info>spip dl</info> : télécharge SPIP en mode HTTP (uniquement lecture) dans le dossier courant
+<info>spip dl spip git@git.spip.net autre/chemin</info> : télécharge SPIP en mode SSH (pour les devs) dans un autre dossier
+<info>spip dl spip git@git.spip.net -b spip-3.1</info> : télécharge SPIP en SSH dans le dossier courant sur la branche 3.1
+
+<info>spip dl git https://url_depot</info> : télécharge n’importe quel dépôt Git dans le dossier courant
+<info>spip dl git -r abcd1234 git://url_depot autre/chemin</info> : télécharge un dépôt Git à une révision précise
+
+<info>spip dl svn -r 1234 svn://url_depot</info> : télécharge un dépôt SVN à une révision précise dans le dossier courant')
 			->addArgument(
 				'methode',
 				InputArgument::OPTIONAL,

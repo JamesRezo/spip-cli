@@ -18,7 +18,7 @@ class SynchroBdd extends Command
 
 	protected function configure() {
 		$this->setName("synchro:bdd")
-			->setDescription("Synchroniser un site BDD / maj des metas / option : rsync d'un dossier")
+			->setDescription("Synchroniser la BDD du SPIP depuis celle d'un autre site (avec maj des metas pour conserver les paramètres spécifiques du SPIP, cf config générée via synchro:init)")
 			->addOption('rsync', 'r', InputOption::VALUE_NONE, 'Jouer rsync')
 			->addOption('backup', 'b', InputOption::VALUE_NONE, 'backup bdd')
 		;

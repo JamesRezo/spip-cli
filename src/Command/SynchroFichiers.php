@@ -17,7 +17,7 @@ class SynchroFichiers extends Command
 
 	protected function configure() {
 		$this->setName("synchro:fichiers")
-			->setDescription("Synchroniser un site BDD / maj des metas / option : rsync d'un dossier")
+			->setDescription("Synchroniser les dossiers du SPIP depuis un autre site option (IMG ou/et autre dossiers configurés via synchro:init)")
 		;
 	}
 

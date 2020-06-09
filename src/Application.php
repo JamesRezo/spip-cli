@@ -16,7 +16,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 class Application extends ConsoleApplication {
 
 	const NAME = "Spip Cli";
-	const VERSION = "0.5.4";
+	const VERSION = "0.5.5";
 
 	/** @var Container */
 	protected $container;
@@ -171,6 +171,10 @@ class Application extends ConsoleApplication {
 		$cwd = getcwd();
 		$spip->chdir();
 		$commandes = find_all_in_path('spip-cli/', '.*[.]php$');
+		// pas le spip.php à la racine de ce plugin (l’ancien exécutable pour démarrer spip-cli);
+		$commandes = array_filter($commandes, function($commande) {
+			return strpos($commande, "spip-cli/spip.php") === false;
+		});
 		foreach ($commandes as $path) {
 			$this->registerSpipCliCommand($path);
 		}

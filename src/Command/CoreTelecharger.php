@@ -35,7 +35,7 @@ class CoreTelecharger extends Command {
 			->setHelp('Quelques exemples :
 
 <info>spip dl</info> : télécharge SPIP en mode HTTP (uniquement lecture) dans le dossier courant
-<info>spip dl spip git@git.spip.net autre/chemin</info> : télécharge SPIP en mode SSH (pour les devs) dans un autre dossier
+<info>spip dl spip git@git.spip.net -d autre/chemin</info> : télécharge SPIP en mode SSH (pour les devs) dans un autre dossier
 <info>spip dl spip git@git.spip.net -b spip-3.1</info> : télécharge SPIP en SSH dans le dossier courant sur la branche 3.1
 
 <info>spip dl git https://url_depot</info> : télécharge n’importe quel dépôt Git dans le dossier courant
@@ -54,9 +54,10 @@ class CoreTelecharger extends Command {
 				'URL du dépôt à télécharger',
 				'?'
 			)
-			->addArgument(
+			->addOption(
 				'dest',
-				InputArgument::OPTIONAL,
+				'd',
+				InputOption::VALUE_OPTIONAL,
 				'Répertoire où télécharger',
 				'.'
 			)
@@ -109,7 +110,7 @@ class CoreTelecharger extends Command {
 		}
 		else {
 			// Quel dossier final ? Par défaut le dossier courant .
-			if ($dest = $input->getArgument('dest')) {
+			if ($dest = $input->getOption('dest')) {
 				$this->dest = rtrim($dest, '/');
 			}
 			
@@ -276,7 +277,8 @@ class CoreTelecharger extends Command {
 				// Une erreur s'il est impossible de garder en mémoire la liste des plugins-dist, que ce soit dans le dossier courant ou dans le dossier parent
 				// On continue quand même car si on cherchait à avoir le master, alors le fichier est bien là
 				if (file_exists($file_externals_master) and  !@copy($file_externals_master, $file_externals)) {
-					$output->writeln(array("<error>Impossible de garder en mémoire la liste des plugins-dist dans {$file_externals}. Vérifier les droits d’écriture.</error>"));
+					$output->writeln(array("<error>Impossible de garder en mémoire la liste des plugins-dist dans {$file_externals}. Vérifiez les droits d’écriture.</error>"));
+					exit;
 				}
 			}
 		}
@@ -394,7 +396,7 @@ class CoreTelecharger extends Command {
 			);
 		}
 
-		return "spip dl svn -r $revision $source {$this->dest}";
+		return "spip dl svn -r $revision -d {$this->dest} $source";
 	}
 	
 	/**
@@ -595,8 +597,11 @@ class CoreTelecharger extends Command {
 		if ($branche) {
 			$opt .= " -b {$branche}";
 		}
+		if ($this->dest != '.') {
+			$opt .= " -d {$this->dest}";
+		}
 		
-		return "spip dl git{$opt} $source {$this->dest}";
+		return "spip dl git{$opt} $source";
 	}
 	
 	/**
@@ -692,9 +697,11 @@ class CoreTelecharger extends Command {
 
 			if (!$infos) {
 				$output->writeln(array("<error>{$this->dest} n’est ni un dépôt Git ni un répertoire vide.</error>"));
+				exit;
 			}
 			elseif ($infos['source'] !== $this->source) {
 				$output->writeln(array("<error>{$this->dest} n’est est pas sur le bon dépôt Git.</error>"));
+				exit;
 			}
 			elseif (
 				!$revision = $input->getOption('revision')
@@ -794,7 +801,7 @@ class CoreTelecharger extends Command {
 			);
 		}
 
-		return "spip dl ftp $source {$this->dest}";
+		return "spip dl ftp -d {$this->dest} $source";
 	}
 	
 	

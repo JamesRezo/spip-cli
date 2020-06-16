@@ -16,7 +16,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 class Application extends ConsoleApplication {
 
 	const NAME = "Spip Cli";
-	const VERSION = "0.5.5";
+	const VERSION = "0.6.0";
 
 	/** @var Container */
 	protected $container;

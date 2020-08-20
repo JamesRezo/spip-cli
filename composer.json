@@ -1,7 +1,9 @@
 {
     "name": "spip/spip-cli",
     "description" : "Command Line for SPIP",
-    "keywords"    : ["spip","cli"],
+    "keywords"    : ["spip", "cli"],
+    "license": "GPL-3.0-or-later",
+    "type": "project",
     "minimum-stability": "stable",
     "require": {
         "php": "^5.4|^7",

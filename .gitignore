@@ -1,2 +1,2 @@
-src/Command/.git*
-/vendor
+/composer.phar
+/vendor/

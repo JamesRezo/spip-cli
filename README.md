@@ -4,13 +4,13 @@ spip-cli est un outil pour commander SPIP depuis la ligne de commandes.
 
 ## Documentation
 
-https://contrib.spip.net/SPIP-Cli
+Sur [SPIP-Contrib](https://contrib.spip.net/SPIP-Cli)
 
 ## Utiliser spip-cli
 
 Pour connaître les commandes disponibles, lancer `spip` dans un shell
 
-```
+```bash
 $ spip
 
 Ligne de commande pour SPIP version 0.2.3
@@ -52,38 +52,43 @@ Dans la version 0.2.3, `spip-cli` permet :
 * utiliser les fonctions propre() et typo()
 
 ## synchro SPIP
+
 > Synchroniser un spip distant sur un spip local, bdd / fichiers / modif des metas
 >
 > ATTENTION, pour l'instant ne fonctionne que sur une bdd en mysql
 
 3 actions possibles :
+
 * `spip synchro:init` creation d'un fichier json : synchroSPIP.json à la racine du SPIP, il restera un peu de configuration à faire.
 * `spip synchro:bdd` pour lancer la synchro de la bdd et la modif des metas
 * `spip synchro:fichiers` pour lancer la synchro des fichiers via rsync
 
 `spip synchro:bdd` : Il y a 3 args facultatifs
+
 * -v : verbeux
 * -b ou --backup: forcer le backup local de la bdd
 * -r ou --rsync: lancer à la fin les commandes rsync du script synchro:fichiers
 
 `spip synchro:fichiers`: Il y a 1 arg facultatif
+
 * -v : verbeux
 
 Fichier de configuration synchroSPIP.json
+
 * Il y a 2 façons pour ouvrir une connexion ssh :
-	* via : user / hostName / port ex : `ssh toto@spip.net -p 1234`, si chemin_cle est defini, on pourra choisir une cle ssh dans un dossier autre que .ssh
-	* via: host (il faut l'avoir défini dans .ssh/config) ex: `ssh mon_host_spip` dans ce cas, pas besoin de renseigner les autres champs dans config_ssh
-	* Il faut avoir une cle ssh
+  * via : user / hostName / port ex : `ssh toto@spip.net -p 1234`, si chemin_cle est defini, on pourra choisir une cle ssh dans un dossier autre que .ssh
+  * via: host (il faut l'avoir défini dans .ssh/config) ex: `ssh mon_host_spip` dans ce cas, pas besoin de renseigner les autres champs dans config_ssh
+  * Il faut avoir une cle ssh
 * Configuration pour le rsync : Chaque ligne représente : chemin local => chemin distant:
-	* le chemin local peut-être en relatif
-	* le chemin distant doit etre en absolue et se terminer par '/'
+  * le chemin local peut-être en relatif
+  * le chemin distant doit etre en absolue et se terminer par '/'
 * Configuration pwd mysql distant: si dans le fichier de configuration, on indique pas le pwd mysql, il sera demandé en console
 
 exemple :
+
 ```json
 "rsync": {
-	"IMG": "chemin abs vers IMG/",
-	"plugins": "chemin abs vers plugins/"
+  "IMG": "chemin abs vers IMG/",
+  "plugins": "chemin abs vers plugins/"
 }
 ```
-
